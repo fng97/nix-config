@@ -16,21 +16,6 @@
 
   programs.home-manager.enable = true;
 
-  programs.neovim = {
-    enable = true;
-
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
-
-    plugins = with pkgs.vimPlugins; [
-      nvim-lspconfig
-      nvim-treesitter.withAllGrammars
-      gruvbox-material
-    ];
-  };
-
   programs.git = {
     enable = true;
     userName = "fng97";
