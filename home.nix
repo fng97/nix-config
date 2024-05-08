@@ -35,6 +35,7 @@
 
   # FIXME: Manually installing p10k with `brew install powerlevel10k`
   # FIXME: Manually installed omz
+  # FIXME: Also manually did `brew install zsh-autosuggestions`
 
   home.sessionVariables = {
     EDITOR = "nvim";
