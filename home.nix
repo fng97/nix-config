@@ -14,31 +14,27 @@
     nodejs_21
   ];
 
-  programs.zsh.enable = true;
-
-  programs.alacritty.enable = true;
-  programs.alacritty.settings = {
-    window = {
-      padding.x = 18;
-      padding.y = 16;
-      decorations = "buttonless";
-    };
-
-    font = {
-      normal.family = "SFMono Nerd Font";
-      normal.style = "Regular";
-      size = 22;
-    };
-  };
-
-  programs.starship.enable = true;
-
   home.file = {
     ".config/nvim" = {
       source = ./nvim;
       recursive = true;
     };
+
+    ".config/alacritty" = {
+      source = ./alacritty;
+      recursive = true;
+    };
+
+    ".zshrc".source = ./dotfiles/zshrc;
+    ".p10k.zsh".source = ./dotfiles/p10k.zsh;
   };
+
+  # Using nix to manage zsh led to an annoying completions permissions thing
+  # I couln't fix so installing things manually for now and copying in a .zshrc
+  # dotfile with nix
+
+  # FIXME: Manually installing p10k with `brew install powerlevel10k`
+  # FIXME: Manually installed omz
 
   home.sessionVariables = {
     EDITOR = "nvim";
