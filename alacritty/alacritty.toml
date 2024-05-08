@@ -11,3 +11,8 @@ decorations = "buttonless"
 normal.family = "SFMono Nerd Font"
 normal.style = "Regular"
 size = 18
+
+[colors]
+# manually setting background to match nvim
+# used `:hi Normal` and used guibg value
+primary.background = "#222436"
