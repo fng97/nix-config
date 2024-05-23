@@ -16,3 +16,9 @@ size = 18
 # manually setting background to match nvim
 # used `:hi Normal` and used guibg value
 primary.background = "#222436"
+
+[keyboard]
+bindings = [
+  { key = "Right", mods = "Alt", chars = "\u001BF" },
+  { key = "Left", mods = "Alt", chars = "\u001BB" },
+]
