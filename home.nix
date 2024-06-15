@@ -12,6 +12,7 @@
     lazygit
     fd
     gh
+    gcc
   ];
 
   home.file = {
