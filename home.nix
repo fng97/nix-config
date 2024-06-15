@@ -2,16 +2,15 @@
 
 {
   home.username = "fng";
-  home.homeDirectory = "/Users/fng";
+  home.homeDirectory = "/home/fng";
 
-  home.stateVersion = "23.11";
+  home.stateVersion = "24.05";
 
   home.packages = with pkgs; [
     # LazyVim
     ripgrep
     lazygit
     fd
-    nodejs_21
   ];
 
   home.file = {
