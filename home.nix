@@ -7,10 +7,10 @@
   home.stateVersion = "24.05";
 
   home.packages = with pkgs; [
-    # LazyVim
     ripgrep
     lazygit
     fd
+    gh
   ];
 
   home.file = {
@@ -18,26 +18,23 @@
       source = ./nvim;
       recursive = true;
     };
-
-    ".config/alacritty" = {
-      source = ./alacritty;
-      recursive = true;
-    };
-
-    ".zshrc".source = ./dotfiles/zshrc;
-    ".p10k.zsh".source = ./dotfiles/p10k.zsh;
   };
 
-  # Using nix to manage zsh led to an annoying completions permissions thing
-  # I couln't fix so installing things manually for now and copying in a .zshrc
-  # dotfile with nix
+  programs.zsh = {
+    enable = true;
 
-  # FIXME: Manually installing p10k with `brew install powerlevel10k`
-  # FIXME: Manually installed omz
-  # FIXME: Also manually did `brew install zsh-autosuggestions`
+    oh-my-zsh = {
+        enable = true;
+        theme = "robbyrussell";
+    };
+
+    syntaxHighlighting.enable = true;
+    autosuggestion.enable = true;
+  };
 
   home.sessionVariables = {
     EDITOR = "nvim";
+    SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
   programs.neovim = {
