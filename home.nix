@@ -7,6 +7,7 @@
   home.stateVersion = "24.05";
 
   home.packages = with pkgs; [
+    wslu
     ripgrep
     lazygit
     fd
@@ -20,6 +21,12 @@
     };
   };
 
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    SHELL = "${pkgs.zsh}/bin/zsh";
+    BROWSER = "wslview";
+  };
+
   programs.zsh = {
     enable = true;
 
@@ -30,11 +37,6 @@
 
     syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
-  };
-
-  home.sessionVariables = {
-    EDITOR = "nvim";
-    SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
   programs.neovim = {
