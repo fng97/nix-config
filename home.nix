@@ -7,12 +7,19 @@
   home.stateVersion = "24.05";
 
   home.packages = with pkgs; [
-    wslu
-    ripgrep
-    lazygit
-    fd
+    wslu # for wslview
     gh
+
+    # for LazyVim
+    lazygit
+    ripgrep
+    fd
     gcc
+    markdownlint-cli
+    unzip
+    nodejs
+    python3
+    rustup # FIXME: had to run `rustup default stable` manually
   ];
 
   home.file = {
