@@ -22,3 +22,4 @@ chsh -s /home/fng/.nix-profile/bin/zsh
 
 - fix clipboard (search for `wsl` in `:help clipboard`)
 - change themes to ayu (would be cool if nvim could inherit wezterm theme)
+- set up zellij
