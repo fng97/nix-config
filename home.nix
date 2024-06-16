@@ -10,6 +10,7 @@
     wslu # for wslview
     gh
     zsh-powerlevel10k
+    nerdfetch
 
     # for LazyVim
     lazygit
@@ -60,6 +61,8 @@
         file = "p10k.zsh";
       }
     ];
+
+    initExtra = "nerdfetch";
   };
 
   programs.zellij = {
