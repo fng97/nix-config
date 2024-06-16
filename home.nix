@@ -28,6 +28,10 @@
       source = ./nvim;
       recursive = true;
     };
+    ".config/zellij" = {
+      source = ./zellij;
+      recursive = true;
+    };
   };
 
   home.sessionVariables = {
@@ -56,6 +60,11 @@
         file = "p10k.zsh";
       }
     ];
+  };
+
+  programs.zellij = {
+    enable = true;
+    enableZshIntegration = true;
   };
 
   programs.neovim = {
