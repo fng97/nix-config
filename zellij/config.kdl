@@ -199,8 +199,10 @@ plugins {
     }
 }
 
+theme "tokyo-night"
+
 themes {
-    default {  // cattpuccin
+    catppuccin {
         bg "#acb0be" // Surface2
         fg "#acb0be" // Surface2
         red "#d20f39"
@@ -212,6 +214,20 @@ themes {
         cyan "#04a5e5" // Sky
         black "#dce0e8" // Crust
         white "#4c4f69" // Text
+    }
+
+    tokyo-night {
+        fg 169 177 214
+        bg 26 27 38
+        black 56 62 90
+        red 249 51 87
+        green 158 206 106
+        yellow 224 175 104
+        blue 122 162 247
+        magenta 187 154 247
+        cyan 42 195 222
+        white 192 202 245
+        orange 255 158 100
     }
 }
 
