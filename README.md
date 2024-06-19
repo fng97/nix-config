@@ -22,4 +22,7 @@ chsh -s /home/fng/.nix-profile/bin/zsh
 
 - fix clipboard (search for `wsl` in `:help clipboard`)
 - change themes to ayu (would be cool if nvim could inherit wezterm theme)
-- set up zellij
+- unify neovim and zellij pane movement
+  - https://www.reddit.com/r/zellij/comments/18xz5ng/use_alt_for_keybinds_in_zellij_avoid_conflicts/
+  - https://github.com/swaits/zellij-nav.nvim
+- scrolling from keyboard in terminal?

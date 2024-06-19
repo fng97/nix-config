@@ -12,6 +12,18 @@
     zsh-powerlevel10k
     nerdfetch
 
+    # TODO: learn how to use nix dev shells for project deps that inherit
+    # environment with direnv
+    cmake
+    poetry
+    ninja
+    ccache
+    gcc-arm-embedded
+    gnumake
+    # FIXME: had to remove clang here and install it with apt. Otherwise it
+    # clashes with gcc.
+    clang-tools
+
     # for LazyVim
     lazygit
     ripgrep
