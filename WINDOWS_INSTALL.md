@@ -31,6 +31,7 @@
      twinkle-tray `
      fancontrol `
      wezterm `
+     win32yank `
      signal
    ```
 

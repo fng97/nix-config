@@ -1,7 +1,7 @@
 -- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")
 
--- Hard wrap markdown because markdown-cli doesn't
+-- hard wrap markdown because markdown-cli doesn't
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
   callback = function()
@@ -10,3 +10,17 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.cmd("setlocal formatoptions+=t")
   end,
 })
+
+-- fix WSL clipboard
+vim.g.clipboard = {
+  name = "win32yank-wsl",
+  copy = {
+    ["+"] = "win32yank.exe -i --crlf",
+    ["*"] = "win32yank.exe -i --crlf",
+  },
+  paste = {
+    ["+"] = "win32yank.exe -o --lf",
+    ["*"] = "win32yank.exe -o --lf",
+  },
+  cache_enabled = false,
+}
