@@ -27,9 +27,11 @@
    winget install --id Valve.Steam
    scoop install `
      powertoys `
+     firefox `
      twinkle-tray `
      fancontrol `
-     wezterm
+     wezterm `
+     signal
    ```
 
 5. Set up LibreWolf
