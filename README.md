@@ -14,6 +14,7 @@ My `home-manager` config. Currently only using this for WSL.
 FIXME: To get zsh working in WSL I had to run the following.
 
 ```bash
+command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s /home/fng/.nix-profile/bin/zsh
 chsh -s /home/fng/.nix-profile/bin/zsh
 ```
