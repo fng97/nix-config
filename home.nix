@@ -56,6 +56,7 @@
     "$HOME/.local/bin"
   ];
 
+  # use starship instead of omz+p10k, as close to default as possible
   programs.zsh = {
     enable = true;
 
