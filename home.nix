@@ -10,7 +10,6 @@
     wslu # for wslview
     gh
     zsh-powerlevel10k
-    nerdfetch
 
     # TODO: learn how to use nix dev shells for project deps that inherit
     # environment with direnv
@@ -18,7 +17,6 @@
     poetry
     ninja
     ccache
-    gcc-arm-embedded
     gnumake
     # FIXME: had to remove clang here and install it with apt. Otherwise it
     # clashes with gcc.
@@ -30,9 +28,10 @@
     fd
     gcc
     markdownlint-cli
+    ruff
     unzip
     nodejs
-    python3
+    # python3
     rustup # FIXME: had to run `rustup default stable` manually
   ];
 
@@ -52,6 +51,10 @@
     SHELL = "${pkgs.zsh}/bin/zsh";
     BROWSER = "wslview";
   };
+
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ];
 
   programs.zsh = {
     enable = true;
@@ -82,8 +85,6 @@
         git push
       '';
     };
-
-    initExtra = "nerdfetch";
   };
 
   programs.zellij = {
@@ -101,6 +102,7 @@
 
   programs.git = {
     enable = true;
+    lfs.enable = true;
     userName = "fng97";
     userEmail = "53615823+fng97@users.noreply.github.com";
     extraConfig = {
