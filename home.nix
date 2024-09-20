@@ -11,17 +11,6 @@
     gh
     zsh-powerlevel10k
 
-    # TODO: learn how to use nix dev shells for project deps that inherit
-    # environment with direnv
-    cmake
-    poetry
-    ninja
-    ccache
-    gnumake
-    # FIXME: had to remove clang here and install it with apt. Otherwise it
-    # clashes with gcc.
-    clang-tools
-
     # for LazyVim
     lazygit
     ripgrep
@@ -36,10 +25,12 @@
   ];
 
   home.file = {
+    # FIXME: move configuration below using vimPlugins.LazyVim?
     ".config/nvim" = {
       source = ./nvim;
       recursive = true;
     };
+    # FIXME: move configuration below
     ".config/zellij" = {
       source = ./zellij;
       recursive = true;
@@ -47,16 +38,17 @@
   };
 
   home.sessionVariables = {
-    EDITOR = "nvim";
     SHELL = "${pkgs.zsh}/bin/zsh";
     BROWSER = "wslview";
   };
 
+  # FIXME: why do I need this?
   home.sessionPath = [
     "$HOME/.local/bin"
   ];
 
-  # use starship instead of omz+p10k, as close to default as possible
+  # TODO: look into alacritty + fish + starship instead of omz+p10k. 
+  # Want something as close to default as possible.
   programs.zsh = {
     enable = true;
 
@@ -91,6 +83,12 @@
   programs.zellij = {
     enable = true;
     enableZshIntegration = true;
+  };
+
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
   };
 
   programs.neovim = {
