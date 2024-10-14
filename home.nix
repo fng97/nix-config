@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   home.username = "fng";
@@ -10,6 +10,7 @@
     wslu # for wslview
     gh
     zsh-powerlevel10k
+    tlrc
 
     # for LazyVim
     lazygit
@@ -20,7 +21,6 @@
     ruff
     unzip
     nodejs
-    # python3
     rustup # FIXME: had to run `rustup default stable` manually
   ];
 
