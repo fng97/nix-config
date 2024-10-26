@@ -77,6 +77,15 @@
         git commit -m "Sync: $(date '+%Y-%m-%d %H:%M:%S')" &&
         git push
       '';
+      journal = ''
+        filename=~/notes/journal/$(date +%Y-%m-%d).md
+        if [[ -f "$filename" ]]; then
+          vim "$filename"
+        else
+          echo "# $(date '+%A, %-d %B %Y')" > "$filename"
+          vim "$filename"
+        fi
+      '';
     };
   };
 
