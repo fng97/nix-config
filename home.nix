@@ -47,6 +47,24 @@
     "$HOME/.local/bin"
   ];
 
+  home.shellAliases = {
+    gitsync = ''
+      git pull &&
+      git add . &&
+      git commit -m "Sync: $(date '+%Y-%m-%d %H:%M:%S')" &&
+      git push
+    '';
+    journal = ''
+      filename=~/notes/journal/$(date +%Y-%m-%d).md
+      if [[ -f "$filename" ]]; then
+        vim "$filename"
+      else
+        echo "# $(date '+%A, %-d %B %Y')" > "$filename"
+        vim "$filename"
+      fi
+    '';
+  };
+
   # TODO: look into alacritty + fish + starship instead of omz+p10k. 
   # Want something as close to default as possible.
   programs.zsh = {
@@ -69,24 +87,6 @@
         file = "p10k.zsh";
       }
     ];
-
-    shellAliases = {
-      gitsync = ''
-        git pull &&
-        git add . &&
-        git commit -m "Sync: $(date '+%Y-%m-%d %H:%M:%S')" &&
-        git push
-      '';
-      journal = ''
-        filename=~/notes/journal/$(date +%Y-%m-%d).md
-        if [[ -f "$filename" ]]; then
-          vim "$filename"
-        else
-          echo "# $(date '+%A, %-d %B %Y')" > "$filename"
-          vim "$filename"
-        fi
-      '';
-    };
   };
 
   programs.zellij = {
