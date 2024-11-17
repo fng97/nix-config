@@ -27,6 +27,16 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.formatting.prettier" },
     { import = "lazyvim.plugins.extras.editor.telescope" },
     { import = "lazyvim.plugins.extras.editor.refactoring" },
+    {
+      "amitds1997/remote-nvim.nvim",
+      version = "*", -- Pin to GitHub releases
+      dependencies = {
+        "nvim-lua/plenary.nvim", -- For standard functions
+        "MunifTanjim/nui.nvim", -- To build the plugin UI
+        "nvim-telescope/telescope.nvim", -- For picking b/w different remote methods
+      },
+      config = true,
+    },
     -- import/override with your plugins
     { import = "plugins" },
   },
@@ -39,7 +49,7 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = { colorscheme = { "tokyonight", "habamax", "gruvbox" } },
   checker = { enabled = true }, -- automatically check for plugin updates
   performance = {
     rtp = {
