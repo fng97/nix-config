@@ -11,6 +11,7 @@
     gh
     zsh-powerlevel10k
     tlrc
+    nixfmt
 
     # for LazyVim
     lazygit
@@ -43,9 +44,7 @@
   };
 
   # FIXME: why do I need this?
-  home.sessionPath = [
-    "$HOME/.local/bin"
-  ];
+  home.sessionPath = [ "$HOME/.local/bin" ];
 
   home.shellAliases = {
     gitsync = ''
