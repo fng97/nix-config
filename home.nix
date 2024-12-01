@@ -56,16 +56,15 @@
     journal = ''
       filename=~/notes/journal/$(date +%Y-%m-%d).md
       if [[ -f "$filename" ]]; then
-        vim "$filename"
+        nvim "$filename"
       else
         echo "# $(date '+%A, %-d %B %Y')" > "$filename"
-        vim "$filename"
+        nvim "$filename"
       fi
     '';
   };
 
-  # TODO: look into alacritty + fish + starship instead of omz+p10k. 
-  # Want something as close to default as possible.
+  # ghostty + fish incoming
   programs.zsh = {
     enable = true;
 
@@ -102,9 +101,6 @@
   programs.neovim = {
     enable = true;
     defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
   };
 
   programs.git = {
