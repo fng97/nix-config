@@ -7,4 +7,4 @@
    nix run home-manager/master -- switch --flake .
    ```
 
-Run `chsh -s $(which fish` if fish is not already the default shell.
+Run `chsh -s $(which fish)` if fish is not already the default shell.

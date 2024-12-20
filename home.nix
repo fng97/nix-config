@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   home.stateVersion = "24.05";
@@ -8,33 +8,23 @@
   home.sessionVariables = { BROWSER = "wslview"; };
 
   home.packages = with pkgs; [
-    wslu # for wslview
-    gh
-    tlrc
+    inputs.nvim.packages.${system}.default
     nixfmt
-
-    # for LazyVim
+    tlrc
     lazygit
-    ripgrep
-    fd
-    gcc
-    markdownlint-cli
-    ruff
-    unzip
-    nodejs
-    rustup # FIXME: had to run `rustup default stable` manually
+    gh
+    wslu # for wslview
   ];
+
+  # TODO: remove fish greeting
+  # TODO: bump starship timeout
+  # TODO: remove "impure" in staship
 
   programs.home-manager.enable = true;
   programs.fish.enable = true;
   programs.starship.enable = true;
 
   home.file = {
-    # TODO: move out nvim config into separate flake
-    ".config/nvim" = {
-      source = ./nvim;
-      recursive = true;
-    };
     # See https://github.com/NixOS/nix/issues/1512. Supposedly fixed but will
     # keep using this hack for now.
     ".config/fish" = {
@@ -43,17 +33,9 @@
     };
   };
 
-  # FIXME: why do I need this? for a nvim dep?
-  home.sessionPath = [ "$HOME/.local/bin" ];
-
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
-  };
-
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
   };
 
   programs.git = {

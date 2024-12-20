@@ -1,15 +1,10 @@
 # Windows Installation Notes
 
-## TODOS
-
-- learn FancyZones
-
 ## Before Installation
 
 - Back up bookmarks
-- Back up FanControl
 
-1. Install Windows according to AtlasOS instructions (if allowed)
+1. Install Windows according to AtlasOS instructions
 
 2. Upgrade PowerShell with `winget`
 
