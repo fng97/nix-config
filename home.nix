@@ -5,10 +5,7 @@
 
   home.username = "fng";
   home.homeDirectory = "/home/fng";
-  home.sessionVariables = {
-    SHELL = "${pkgs.zsh}/bin/zsh";
-    BROWSER = "wslview";
-  };
+  home.sessionVariables = { BROWSER = "wslview"; };
 
   home.packages = with pkgs; [
     wslu # for wslview
@@ -29,6 +26,7 @@
   ];
 
   programs.home-manager.enable = true;
+  programs.fish.enable = true;
   programs.starship.enable = true;
 
   home.file = {
@@ -37,16 +35,16 @@
       source = ./nvim;
       recursive = true;
     };
+    # See https://github.com/NixOS/nix/issues/1512. Supposedly fixed but will
+    # keep using this hack for now.
+    ".config/fish" = {
+      source = ./fish;
+      recursive = true;
+    };
   };
 
   # FIXME: why do I need this? for a nvim dep?
   home.sessionPath = [ "$HOME/.local/bin" ];
-
-  programs.zsh = {
-    enable = true;
-    syntaxHighlighting.enable = true;
-    autosuggestion.enable = true;
-  };
 
   programs.direnv = {
     enable = true;
