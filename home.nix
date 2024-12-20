@@ -1,15 +1,18 @@
 { pkgs, ... }:
 
 {
+  home.stateVersion = "24.05";
+
   home.username = "fng";
   home.homeDirectory = "/home/fng";
-
-  home.stateVersion = "24.05";
+  home.sessionVariables = {
+    SHELL = "${pkgs.zsh}/bin/zsh";
+    BROWSER = "wslview";
+  };
 
   home.packages = with pkgs; [
     wslu # for wslview
     gh
-    zsh-powerlevel10k
     tlrc
     nixfmt
 
@@ -25,76 +28,28 @@
     rustup # FIXME: had to run `rustup default stable` manually
   ];
 
+  programs.home-manager.enable = true;
+  programs.starship.enable = true;
+
   home.file = {
-    # FIXME: move configuration below using vimPlugins.LazyVim?
+    # TODO: move out nvim config into separate flake
     ".config/nvim" = {
       source = ./nvim;
       recursive = true;
     };
-    # FIXME: move configuration below
-    ".config/zellij" = {
-      source = ./zellij;
-      recursive = true;
-    };
   };
 
-  home.sessionVariables = {
-    SHELL = "${pkgs.zsh}/bin/zsh";
-    BROWSER = "wslview";
-  };
-
-  # FIXME: why do I need this?
+  # FIXME: why do I need this? for a nvim dep?
   home.sessionPath = [ "$HOME/.local/bin" ];
 
-  home.shellAliases = {
-    gitsync = ''
-      git pull &&
-      git add . &&
-      git commit -m "Sync: $(date '+%Y-%m-%d %H:%M:%S')" &&
-      git push
-    '';
-    journal = ''
-      filename=~/notes/journal/$(date +%Y-%m-%d).md
-      if [[ -f "$filename" ]]; then
-        nvim "$filename"
-      else
-        echo "# $(date '+%A, %-d %B %Y')" > "$filename"
-        nvim "$filename"
-      fi
-    '';
-  };
-
-  # ghostty + fish incoming
   programs.zsh = {
     enable = true;
-
-    oh-my-zsh.enable = true;
-
     syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
-
-    plugins = [
-      {
-        name = "powerlevel10k";
-        src = pkgs.zsh-powerlevel10k;
-        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
-      }
-      {
-        name = "powerlevel10k-config";
-        src = ./p10k;
-        file = "p10k.zsh";
-      }
-    ];
-  };
-
-  programs.zellij = {
-    enable = true;
-    enableZshIntegration = true;
   };
 
   programs.direnv = {
     enable = true;
-    enableZshIntegration = true;
     nix-direnv.enable = true;
   };
 
@@ -113,6 +68,4 @@
       init.defaultBranch = "main";
     };
   };
-
-  programs.home-manager.enable = true;
 }
