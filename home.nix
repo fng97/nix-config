@@ -26,6 +26,10 @@
       source = ./fish;
       recursive = true;
     };
+    ".config/alacritty" = {
+      source = ./alacritty;
+      recursive = true;
+    };
   };
 
   programs.direnv = {

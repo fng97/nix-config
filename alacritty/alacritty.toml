@@ -1,0 +1,16 @@
+[env]
+TERM = "xterm-256color"
+
+[window]
+padding.x = 10
+padding.y = 10
+
+[font]
+normal.family = "JetBrains Mono"
+normal.style = "Regular"
+size = 18
+
+[colors]
+# manually setting background to match nvim
+# used `:hi Normal` and used guibg value
+primary.background = "#282828"
