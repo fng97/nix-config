@@ -11,15 +11,16 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }@inputs:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in {
-      homeConfigurations."fng" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        extraSpecialArgs = { inherit inputs; };
-        modules = [ ./home.nix ];
-      };
+  outputs = { nixpkgs, home-manager, ... }@inputs: {
+    homeConfigurations."wsl" = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages."x86_64-linux";
+      extraSpecialArgs = { inherit inputs; };
+      modules = [ ./home.nix ./wsl.nix ];
     };
+    homeConfigurations."macbook" = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages."x86_64-darwin";
+      extraSpecialArgs = { inherit inputs; };
+      modules = [ ./home.nix ./macbook.nix ];
+    };
+  };
 }

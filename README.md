@@ -4,7 +4,15 @@
 2. Clone this repo to `~/.config/home-manager` and from the root run:
 
    ```bash
-   nix run home-manager/master -- switch --flake .
+   nix run home-manager/master -- switch --flake .#fng
    ```
 
-Run `chsh -s $(which fish)` if fish is not already the default shell.
+Run the following to make fish the default shell.
+
+```bash
+which fish | sudo tee -a /etc/shells
+```
+
+```bash
+chsh -s $(which fish)
+```

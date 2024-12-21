@@ -3,17 +3,12 @@
 {
   home.stateVersion = "24.05";
 
-  home.username = "fng";
-  home.homeDirectory = "/home/fng";
-  home.sessionVariables = { BROWSER = "wslview"; };
-
   home.packages = with pkgs; [
     inputs.nvim.packages.${system}.default
     nixfmt
     tlrc
     lazygit
     gh
-    wslu # for wslview
   ];
 
   # TODO: remove fish greeting
