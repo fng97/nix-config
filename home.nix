@@ -5,8 +5,8 @@
 
   home.packages = with pkgs; [
     inputs.nixvim.packages.${system}.default
-    nixfmt
-    markdownlint-cli2
+    nixfmt-classic
+    markdownlint-cli
     tlrc
     lazygit
     gh
@@ -18,6 +18,8 @@
 
   programs.home-manager.enable = true;
   programs.starship.enable = true;
+  programs.fish.enable = true;
+  home.sessionVariables.EDITOR = "nvim";
 
   home.file = {
     # See https://github.com/NixOS/nix/issues/1512. Supposedly fixed but will
@@ -29,19 +31,6 @@
     ".config/alacritty" = {
       source = ./alacritty;
       recursive = true;
-    };
-  };
-
-  programs.fish = {
-    enable = true;
-    shellAliases = {
-      lazyvim = ''
-        if test (count $argv) -gt 0;
-          nix run github:sei40kr/nix-lazyvim -- $argv; 
-        else; 
-          nix run github:sei40kr/nix-lazyvim; 
-        end
-      '';
     };
   };
 

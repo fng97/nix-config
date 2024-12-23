@@ -5,10 +5,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixvim = {
-      url = "github:fng97/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixvim.url = "github:fng97/nixvim";
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs: {

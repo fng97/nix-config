@@ -15,3 +15,4 @@
     ```bash
     chsh -s $(which fish)
     ```
+For moments of desperation: `nix run github:sei40kr/nix-lazyvim -- {file}`
