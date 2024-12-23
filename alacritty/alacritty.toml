@@ -1,3 +1,6 @@
+[shell]
+program = "/Users/fran/.nix-profile/bin/fish"
+
 [env]
 TERM = "xterm-256color"
 
@@ -6,9 +9,9 @@ padding.x = 10
 padding.y = 10
 
 [font]
-normal.family = "JetBrains Mono"
+normal.family = "JetBrains Mono" # FIXME: currently installed manually
 normal.style = "Regular"
-size = 18
+size = 20
 
 [colors]
 # manually setting background to match nvim
