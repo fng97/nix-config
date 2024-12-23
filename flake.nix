@@ -5,7 +5,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nvim = {
+    nixvim = {
       url = "github:fng97/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };

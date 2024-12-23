@@ -4,7 +4,7 @@
   home.stateVersion = "24.05";
 
   home.packages = with pkgs; [
-    inputs.nvim.packages.${system}.default
+    inputs.nixvim.packages.${system}.default
     nixfmt
     markdownlint-cli2
     tlrc
