@@ -6,13 +6,12 @@
    ```bash
    nix run home-manager/master -- switch --flake .#fng
    ```
+4. Run the following to make fish the default shell:
 
-Run the following to make fish the default shell.
+    ```bash
+    which fish | sudo tee -a /etc/shells
+    ```
 
-```bash
-which fish | sudo tee -a /etc/shells
-```
-
-```bash
-chsh -s $(which fish)
-```
+    ```bash
+    chsh -s $(which fish)
+    ```

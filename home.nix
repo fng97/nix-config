@@ -6,6 +6,7 @@
   home.packages = with pkgs; [
     inputs.nvim.packages.${system}.default
     nixfmt
+    markdownlint-cli2
     tlrc
     lazygit
     gh
@@ -16,7 +17,6 @@
   # TODO: remove "impure" in staship
 
   programs.home-manager.enable = true;
-  programs.fish.enable = true;
   programs.starship.enable = true;
 
   home.file = {
@@ -29,6 +29,19 @@
     ".config/alacritty" = {
       source = ./alacritty;
       recursive = true;
+    };
+  };
+
+  programs.fish = {
+    enable = true;
+    shellAliases = {
+      lazyvim = ''
+        if test (count $argv) -gt 0;
+          nix run github:sei40kr/nix-lazyvim -- $argv; 
+        else; 
+          nix run github:sei40kr/nix-lazyvim; 
+        end
+      '';
     };
   };
 
