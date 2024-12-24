@@ -5,6 +5,8 @@
 
   home.packages = with pkgs; [
     inputs.nixvim.packages.${system}.default
+    # FIXME: had to manually add ~/.nix-profile/share/fonts to Font Book
+    nerd-fonts.jetbrains-mono
     nixfmt-classic
     markdownlint-cli
     tlrc
@@ -21,6 +23,7 @@
   programs.fish.enable = true;
   home.sessionVariables.EDITOR = "nvim";
   home.sessionVariables.SHELL = "${pkgs.fish}/bin/fish";
+  fonts.fontconfig.enable = true;
 
   home.file = {
     # See https://github.com/NixOS/nix/issues/1512. Supposedly fixed but will

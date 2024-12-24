@@ -1,4 +1,4 @@
-[shell]
+[terminal.shell]
 program = "/Users/fran/.nix-profile/bin/fish"
 
 [env]
@@ -9,9 +9,9 @@ padding.x = 10
 padding.y = 10
 
 [font]
-normal.family = "JetBrains Mono" # FIXME: currently installed manually
+normal.family = "JetBrainsMono NF"
 normal.style = "Regular"
-size = 20
+size = 16
 
 # Colors (Gruvbox dark)
 # ---------------------
