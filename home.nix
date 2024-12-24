@@ -20,6 +20,7 @@
   programs.starship.enable = true;
   programs.fish.enable = true;
   home.sessionVariables.EDITOR = "nvim";
+  home.sessionVariables.SHELL = "${pkgs.fish}/bin/fish";
 
   home.file = {
     # See https://github.com/NixOS/nix/issues/1512. Supposedly fixed but will
