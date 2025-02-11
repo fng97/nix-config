@@ -3,9 +3,13 @@
 {
   home.stateVersion = "24.05";
 
+  home.username = "fng";
+  home.homeDirectory = "/home/fng";
+  home.sessionVariables = { BROWSER = "wslview"; };
+
   home.packages = with pkgs; [
     inputs.nixvim.packages.${system}.default
-    # FIXME: had to manually add ~/.nix-profile/share/fonts to Font Book
+    wslu # for wslview
     nerd-fonts.jetbrains-mono
     nixfmt-classic
     markdownlint-cli
@@ -30,10 +34,6 @@
     # keep using this hack for now.
     ".config/fish" = {
       source = ./fish;
-      recursive = true;
-    };
-    ".config/alacritty" = {
-      source = ./alacritty;
       recursive = true;
     };
   };
