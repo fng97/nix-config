@@ -26,6 +26,8 @@
             programs.fish.enable = true;
             users.defaultUserShell = pkgs.fish;
             # wsl.startMenuLaunchers = true;
+            virtualisation.docker.enable = true;
+            users.users.fng.extraGroups = [ "docker" ];
           }
 
           home-manager.nixosModules.home-manager
