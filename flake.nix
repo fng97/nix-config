@@ -21,10 +21,12 @@
           nixos-wsl.nixosModules.default
           {
             system.stateVersion = "24.05";
+            nix.settings.experimental-features = [ "flakes nix-command" ];
             wsl.enable = true;
             wsl.defaultUser = "fng";
             programs.fish.enable = true;
             users.defaultUserShell = pkgs.fish;
+            # programs.nix-ld.enable = true;
             # wsl.startMenuLaunchers = true;
             virtualisation.docker.enable = true;
             users.users.fng.extraGroups = [ "docker" ];
