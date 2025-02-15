@@ -10,6 +10,8 @@
    ```
 4. Use `wsl -s NixOS` to make it the default
 
+Use `sudo nixos-rebuild switch --flake .#wsl` for future updates.
+
 ## Windows
 
 1. Update everything with `winget upgrade --all`
