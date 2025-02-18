@@ -4,12 +4,9 @@
   home.stateVersion = "24.05";
 
   home.username = "fng";
-  home.homeDirectory = "/home/fng";
-  home.sessionVariables = { BROWSER = "wslview"; };
 
   home.packages = with pkgs; [
     inputs.nixvim.packages.${system}.default
-    wslu # for wslview
     nerd-fonts.jetbrains-mono
     nixfmt-classic
     markdownlint-cli

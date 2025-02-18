@@ -13,13 +13,13 @@
   };
 
   outputs = { nixpkgs, home-manager, nixos-wsl, ... }@inputs:
-    let pkgs = nixpkgs.legacyPackages."x86_64-linux";
-    in rec {
+    {
       nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        pkgs = nixpkgs.legacyPackages."x86_64-linux";
         modules = [
           nixos-wsl.nixosModules.default
-          {
+          ({ config, pkgs, ... }: {
             system.stateVersion = "24.05";
             nix.settings.experimental-features = [ "flakes nix-command" ];
             wsl.enable = true;
@@ -30,21 +30,27 @@
             # wsl.startMenuLaunchers = true;
             virtualisation.docker.enable = true;
             users.users.fng.extraGroups = [ "docker" ];
-          }
+          })
 
           home-manager.nixosModules.home-manager
-          {
+          ({ config, pkgs, ... }: {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.fng = import ./home.nix { inherit inputs pkgs; };
-          }
+            # FIXME: need to import wsl.nix here
+            home-manager.users.fng = import ./home.nix {
+              inherit inputs pkgs;
+            };
+          })
         ];
       };
 
-      # For quickly applying local settings with:
-      # home-manager switch --flake .#fng
-      homeConfigurations = {
-        fng = nixosConfigurations.wsl.config.home-manager.users.fng.home;
+      # macOS
+      homeConfigurations.fng = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages."aarch64-darwin";
+        extraSpecialArgs = { 
+          inherit inputs;
+        };
+        modules = [ ./home.nix ./macos.nix ];
       };
     };
 }
