@@ -1,5 +1,11 @@
 # Nix Config
 
+## macOS
+
+1. Install Nix with the [Determinate Installer](https://github.com/DeterminateSystems/nix-installer)
+2. Run `nix run home-manager/master -- switch --flake github:fng97/nix-config`
+3. For local changes to the flake use `home-manager switch --flake .`
+
 ## WSL
 
 1. Install [NixOS-WSL](https://github.com/nix-community/NixOS-WSL)
@@ -9,8 +15,7 @@
    sudo nixos-rebuild switch --flake github:fng97/nix-config#wsl
    ```
 4. Use `wsl -s NixOS` to make it the default
-
-Use `sudo nixos-rebuild switch --flake .#wsl` for future updates.
+5. For local changes to the flake use `sudo nixos-rebuild switch --flake .#wsl`
 
 ## Windows
 
