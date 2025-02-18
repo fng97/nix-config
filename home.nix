@@ -14,6 +14,8 @@
     lazygit
     gh
     television
+    bitwarden-cli
+    htop
   ];
 
   # TODO: remove fish greeting
