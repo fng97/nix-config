@@ -13,6 +13,7 @@
     tlrc
     lazygit
     gh
+    television
   ];
 
   # TODO: remove fish greeting
