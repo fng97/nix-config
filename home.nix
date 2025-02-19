@@ -30,6 +30,7 @@
   fonts.fontconfig.enable = true;
 
   home.file = {
+    # FIXME: still need this in NixOS-WSL?
     # See https://github.com/NixOS/nix/issues/1512. Supposedly fixed but will
     # keep using this hack for now.
     ".config/fish" = {
