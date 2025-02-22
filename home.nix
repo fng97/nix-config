@@ -16,11 +16,17 @@
     television
     bitwarden-cli
     htop
+
+    # install some build tools by default
+    cmake
+    python313
+    zig
   ];
 
   # TODO: remove fish greeting
   # TODO: bump starship timeout
   # TODO: remove "impure" in staship
+  # TODO: nvim undo/redo history (between sessions)
 
   programs.home-manager.enable = true;
   programs.starship.enable = true;
