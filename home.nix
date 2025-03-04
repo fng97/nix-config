@@ -19,13 +19,16 @@
 
     # install some build tools by default
     cmake
+    ccache
     python313
     zig
+    rustup
   ];
 
+  # TODO: set up nix-darwin for macos
   # TODO: remove fish greeting
   # TODO: bump starship timeout
-  # TODO: remove "impure" in staship
+  # TODO: remove "impure" in staship nix indicator
   # TODO: nvim undo/redo history (between sessions)
 
   programs.home-manager.enable = true;
