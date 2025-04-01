@@ -2,8 +2,9 @@
 
 {
   home.stateVersion = "24.05";
-
   home.username = "fng";
+  home.sessionVariables.EDITOR = "nvim";
+  home.sessionVariables.SHELL = "${pkgs.fish}/bin/fish";
 
   home.packages = with pkgs; [
     inputs.nixvim.packages.${system}.default
@@ -25,12 +26,11 @@
     rustup
   ];
 
+  fonts.fontconfig.enable = true;
+
   programs.home-manager.enable = true;
   programs.starship.enable = true;
   programs.fish.enable = true;
-  home.sessionVariables.EDITOR = "nvim";
-  home.sessionVariables.SHELL = "${pkgs.fish}/bin/fish";
-  fonts.fontconfig.enable = true;
 
   programs.direnv = {
     enable = true;
@@ -46,5 +46,11 @@
       push.autoSetupRemote = "true";
       init.defaultBranch = "main";
     };
+  };
+
+  programs.vscode = {
+    enable = true;
+    # extensions = [];
+    # userSettings = ;
   };
 }

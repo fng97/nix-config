@@ -15,10 +15,17 @@
   outputs = { nixpkgs, home-manager, nixos-wsl, ... }@inputs:
     let
       # pkgs is overridden in standalone home-manager (for macOS)
-      pkgs = nixpkgs.legacyPackages."x86_64-linux";
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+        config = {
+          allowUnfree = true;
+          allowUnfreePredicate = _: true;
+        };
+      };
     in {
       nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = inputs // { pkgs = pkgs; };
         modules = [
           nixos-wsl.nixosModules.default
           {
@@ -48,7 +55,10 @@
 
       # macOS
       homeConfigurations.fng = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages."aarch64-darwin";
+        pkgs = import nixpkgs {
+          system = "aarch64-darwin";
+          config.allowUnfree = true;
+        };
         extraSpecialArgs = { inherit inputs; };
         modules = [ ./home.nix ./macos.nix ];
       };
