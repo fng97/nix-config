@@ -20,12 +20,5 @@
 ## Windows
 
 1. Update everything with `winget upgrade --all`
-2. Install [scoop](https://scoop.sh/)
-3. Install the following with scoop:
-   - `firefox`
-   - `wezterm`
-   - `powertoys`
-   - `win32yank`
-   - `twinkle-tray`
-4. PowerToys: enable PowerToys Run and Keyboard Manager (swap CAPS for CTRL), disable the rest
-5. Copy `wezterm.lua` to `~/.config/wezterm` (_Windows_ home directory)
+2. PowerToys: enable PowerToys Run and Keyboard Manager (swap CAPS for CTRL), disable the rest
+3. Copy `wezterm.lua` to `~/.config/wezterm` (_Windows_ home directory)

@@ -25,28 +25,12 @@
     rustup
   ];
 
-  # TODO: set up nix-darwin for macos
-  # TODO: remove fish greeting
-  # TODO: bump starship timeout
-  # TODO: remove "impure" in staship nix indicator
-  # TODO: nvim undo/redo history (between sessions)
-
   programs.home-manager.enable = true;
   programs.starship.enable = true;
   programs.fish.enable = true;
   home.sessionVariables.EDITOR = "nvim";
   home.sessionVariables.SHELL = "${pkgs.fish}/bin/fish";
   fonts.fontconfig.enable = true;
-
-  home.file = {
-    # FIXME: still need this in NixOS-WSL?
-    # See https://github.com/NixOS/nix/issues/1512. Supposedly fixed but will
-    # keep using this hack for now.
-    ".config/fish" = {
-      source = ./fish;
-      recursive = true;
-    };
-  };
 
   programs.direnv = {
     enable = true;
