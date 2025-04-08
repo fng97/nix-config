@@ -35,7 +35,11 @@
           home-manager.extraSpecialArgs = { inherit inputs pkgs; };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.fng = { imports = [ ./home.nix ./wsl.nix ]; };
+          home-manager.users.fng = {
+            imports = [ ./home.nix ];
+            home.sessionVariables.BROWSER = "wslview";
+            home.packages = with pkgs; [ wslu ];
+          };
         }
       ];
     };
