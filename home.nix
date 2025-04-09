@@ -7,33 +7,13 @@
 
   home.packages = with pkgs; [
     inputs.nixvim.packages.${system}.default
-    nerd-fonts.jetbrains-mono
     nixfmt-classic
-    markdownlint-cli
     tlrc
     lazygit
     gh
     television
-    bitwarden-cli
     htop
-
-    # install some build tools by default
-    cmake
-    ccache
-    python313
-    zig
-    rustup
   ];
-
-  home.file = {
-    # FIXME: still need this in NixOS-WSL?
-    # See https://github.com/NixOS/nix/issues/1512. Supposedly fixed but will
-    # keep using this hack for now.
-    ".config/fish" = {
-      source = ./fish;
-      recursive = true;
-    };
-  };
 
   programs.home-manager.enable = true;
   programs.starship.enable = true;
