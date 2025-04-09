@@ -55,8 +55,9 @@
         modules = [
           {
             system.stateVersion = 5;
-            # environment.systemPackages = with pkgs; [ tailscale ];
-            # services.tailscale.enable = true;
+            environment.systemPackages = with pkgs;
+              [ tailscale ]; # FIXME: should this be in home manager?
+            services.tailscale.enable = true;
             nix.settings.experimental-features = "nix-command flakes";
             # TODO: reinstall Determinate Nix but use vanilla upstream Nix and delete line below
             nix.enable = false;
