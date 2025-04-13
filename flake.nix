@@ -55,15 +55,13 @@
         modules = [
           {
             system.stateVersion = 5;
-            environment.systemPackages = with pkgs;
-              [ tailscale ]; # FIXME: should this be in home manager?
+            environment.systemPackages = with pkgs; [ tailscale wezterm ];
             services.tailscale.enable = true;
             nix.settings.experimental-features = "nix-command flakes";
-            # TODO: reinstall Determinate Nix but use vanilla upstream Nix and delete line below
-            nix.enable = false;
             programs.fish.enable = true;
             system.configurationRevision = self.rev or self.dirtyRev or null;
             users.users.fng.home = "/Users/fng";
+            users.users.fng.shell = pkgs.fish;
           }
           home-manager.darwinModules.home-manager
           {
