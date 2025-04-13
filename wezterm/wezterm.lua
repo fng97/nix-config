@@ -4,9 +4,24 @@ local wezterm = require("wezterm")
 
 local config = {}
 
+function get_appearance()
+	if wezterm.gui then
+		return wezterm.gui.get_appearance()
+	end
+	return "Dark"
+end
+
+function scheme_for_appearance(appearance)
+	if appearance:find("Dark") then
+		return "Gruvbox dark, hard (base16)"
+	else
+		return "Google Light (base16)"
+	end
+end
+
+config.color_scheme = scheme_for_appearance(get_appearance())
 config.font = wezterm.font("JetBrains Mono")
 config.font_size = 16
-config.color_scheme = "Gruvbox Dark (Gogh)"
 config.hide_tab_bar_if_only_one_tab = true
 
 if wezterm.target_triple == "x86_64-pc-windows-msvc" and wezterm.running_under_wsl then
