@@ -10,7 +10,8 @@
 ## `wsl`
 
 1. Install [NixOS-WSL](https://github.com/nix-community/NixOS-WSL)
-2. Once in, run `sudo nix-channel --update` and `sudo nixos-rebuild switch` (not sure this is necessary but I do it anyway)
+2. Once in, run `sudo nix-channel --update` and `sudo nixos-rebuild switch`
+   (not sure this is necessary but I do it anyway)
 3. Switch to flake:
    ```bash
    sudo nixos-rebuild switch --flake github:fng97/nix-config#wsl

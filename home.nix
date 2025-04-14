@@ -49,7 +49,7 @@
       rustfmt
       nixfmt-classic
       jq
-      markdownlint-cli2
+      mdformat
       ruff
       zig
     ];

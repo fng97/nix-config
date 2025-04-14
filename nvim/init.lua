@@ -5,10 +5,12 @@ vim.g.maplocalleader = " "
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.termguicolors = true
+vim.opt.undofile = true -- persist undo history
 vim.opt.cmdheight = 0 -- hide command line unless active
 vim.opt.confirm = true -- don't fail silently
 vim.opt.ignorecase = true -- ignore case when searching...
 vim.opt.smartcase = true -- unless uppercase used in search
+vim.opt.textwidth = 120 -- break lines at 120
 vim.opt.tabstop = 2 -- a tab character is displayed as 2 spaces
 vim.opt.softtabstop = 2 -- pressing tab inserts 2 spaces
 vim.opt.shiftwidth = 2 -- indentation uses 2 spaces
@@ -25,6 +27,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight yanked text",
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "cpp", "c" },
+	callback = function()
+		vim.bo.commentstring = "// %s"
+	end,
+	desc = "Set comment style to '//' for C and C++ (default is '/**/')",
+})
+
 -- APPEARANCE
 
 require("catppuccin").setup({
@@ -37,7 +47,7 @@ require("lualine").setup({
 	options = { globalstatus = true },
 	sections = {
 		lualine_c = { { "buffers", max_length = vim.o.columns * 2 / 3 } },
-		lualine_x = { "progress" },
+		lualine_x = { "searchcount", "progress" },
 		lualine_y = { "location" },
 		lualine_z = { { "datetime", style = "%d/%m/%y %H:%M" } },
 	},
@@ -65,7 +75,7 @@ require("conform").setup({
 		bash = { "shfmt" },
 		lua = { "stylua" },
 		nix = { "nixfmt" },
-		markdown = { "markdownlint-cil2" },
+		markdown = { "mdformat" },
 		json = { "jq" },
 	},
 })
@@ -93,9 +103,8 @@ map("n", "<leader><leader>", "<cmd>Telescope find_files<CR>", { desc = "Find fil
 map("n", "<leader>/", "<cmd>Telescope live_grep<CR>", { desc = "Live grep" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Find buffers" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Find help" })
-map("n", "<leader>fk", function()
-	require("telescope.builtin").keymaps()
-end, { desc = "Search keymaps" })
+map("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", { desc = "Find recently opened files" })
+map("n", "<leader>fk", "<cmd>Telescope keymaps<CR>", { desc = "Search keymaps" })
 map("n", "<leader>ff", function()
 	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
 end, { desc = "Find all files" })
@@ -109,6 +118,9 @@ map("n", "<C-d>", "<C-d>zz", { desc = "Page down and center" })
 -- better visual mode indentation (indent without deselecting)
 map("v", "<", "<gv", { desc = "Indent Left" })
 map("v", ">", ">gv", { desc = "Indent Right" })
+
+-- clear search highlighting
+map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
 
 -- window management
 map("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
