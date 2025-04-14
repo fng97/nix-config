@@ -49,7 +49,7 @@
       rustfmt
       nixfmt-classic
       jq
-      mdformat
+      nodePackages.prettier
       ruff
       zig
     ];

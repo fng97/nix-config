@@ -75,7 +75,7 @@ require("conform").setup({
 		bash = { "shfmt" },
 		lua = { "stylua" },
 		nix = { "nixfmt" },
-		markdown = { "mdformat" },
+		markdown = { "prettier" },
 		json = { "jq" },
 	},
 })
