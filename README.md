@@ -20,6 +20,6 @@
 
 ## Windows
 
-1. Update everything with `winget upgrade --all`
+1. Update everything with `winget upgrade --all` and make sure `win32yank.exe` is installed
 2. PowerToys: enable Keyboard Manager (swap CAPS for CTRL), disable the rest
 3. Copy `wezterm.lua` to `~/.config/wezterm` (_Windows_ home directory)

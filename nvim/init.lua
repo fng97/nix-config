@@ -45,6 +45,12 @@ require("lualine").setup({
 
 require("auto-dark-mode").setup({ update_interval = 1000 })
 
+-- LSP
+
+-- vim.lsp.enable("clangd") -- FIXME: below is legacy, switch to this style once upgraded to nvim 0.11+
+require("lspconfig").clangd.setup({})
+require("lspconfig").ruff.setup({})
+
 -- FORMATTING
 
 require("conform").setup({

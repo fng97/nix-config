@@ -36,6 +36,7 @@
       conform-nvim
       neo-tree-nvim
       lualine-nvim
+      nvim-lspconfig
       auto-dark-mode-nvim
     ];
 
@@ -49,6 +50,7 @@
       black
       nixfmt-classic
       nodePackages.prettier
+      ruff
     ];
 
     extraLuaConfig = pkgs.lib.fileContents ./nvim/init.lua;
