@@ -39,7 +39,7 @@ require("lualine").setup({
 		lualine_c = { { "buffers", max_length = vim.o.columns * 2 / 3 } },
 		lualine_x = { "progress" },
 		lualine_y = { "location" },
-		lualine_z = { { "datetime", style = "%d/%m/%y %H:%M:%S" } },
+		lualine_z = { { "datetime", style = "%d/%m/%y %H:%M" } },
 	},
 })
 
@@ -54,19 +54,19 @@ require("lspconfig").ruff.setup({})
 -- FORMATTING
 
 require("conform").setup({
+	format_on_save = {},
 	formatters_by_ft = {
 		_ = { "trim_whitespace", "trim_newlines" },
 		cpp = { "clang-format" },
-		cmake = { "cmake_format" },
+		zig = { "zigfmt" },
 		rust = { "rustfmt" },
-		python = { "black" },
+		cmake = { "cmake_format" },
+		python = { "ruff_format" },
 		bash = { "shfmt" },
 		lua = { "stylua" },
 		nix = { "nixfmt" },
-		markdown = { "prettier" },
-		json = { "prettier" },
-		toml = { "prettier" },
-		yaml = { "prettier" },
+		markdown = { "markdownlint-cil2" },
+		json = { "jq" },
 	},
 })
 
@@ -106,7 +106,7 @@ map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, 
 map("n", "<C-u>", "<C-u>zz", { desc = "Page up and center" })
 map("n", "<C-d>", "<C-d>zz", { desc = "Page down and center" })
 
--- indentation
+-- better visual mode indentation (indent without deselecting)
 map("v", "<", "<gv", { desc = "Indent Left" })
 map("v", ">", ">gv", { desc = "Indent Right" })
 
@@ -128,7 +128,6 @@ map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase Window W
 -- buffer management
 map("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Previous Buffer" })
 map("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
-map("n", "<leader>bD", "<cmd>bd<CR>", { desc = "Delete Buffer" })
 map("n", "<leader>bd", "<cmd>bd<CR>", { desc = "Delete buffer" })
 map("n", "<leader>bo", "<cmd>%bd|e#|bd#<CR>", { desc = "Delete other buffers" })
 
@@ -143,11 +142,6 @@ map("v", "<leader>P", '"+P', { desc = "Paste selection from system clipboard bef
 -- lsp
 map("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { desc = "Go to declaration" })
 map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "Go to definition" })
-
--- format
-vim.keymap.set("n", "<leader>cf", function()
-	require("conform").format({ async = true, lsp_fallback = false })
-end, { desc = "Format code" })
 
 -- ui
 map("n", "<leader>ud", function()

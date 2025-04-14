@@ -47,10 +47,11 @@
       cmake-format
       stylua
       rustfmt
-      black
       nixfmt-classic
-      nodePackages.prettier
+      jq
+      markdownlint-cli2
       ruff
+      zig
     ];
 
     extraLuaConfig = pkgs.lib.fileContents ./nvim/init.lua;
