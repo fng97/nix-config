@@ -1,19 +1,11 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
   home.stateVersion = "24.05";
-
   home.username = "fng";
+  home.sessionVariables.SHELL = "${pkgs.fish}/bin/fish";
 
-  home.packages = with pkgs; [
-    inputs.nixvim.packages.${system}.default
-    nixfmt-classic
-    tlrc
-    lazygit
-    gh
-    television
-    htop
-  ];
+  home.packages = with pkgs; [ nixfmt-classic tlrc lazygit gh television htop ];
 
   home.file.".config/wezterm" = {
     source = ./wezterm;
@@ -24,9 +16,30 @@
   programs.starship.enable = true;
   programs.fish.enable = true;
 
-  home.sessionVariables.EDITOR = "nvim";
-  home.sessionVariables.SHELL = "${pkgs.fish}/bin/fish";
-  fonts.fontconfig.enable = true;
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    plugins = with pkgs.vimPlugins; [
+      catppuccin-nvim
+      nvim-treesitter.withAllGrammars
+      telescope-nvim
+      conform-nvim
+      neo-tree-nvim
+      lualine-nvim
+    ];
+    extraPackages = with pkgs; [
+      ripgrep
+      shfmt
+      clang-tools
+      cmake-format
+      stylua
+      rustfmt
+      black
+      nixfmt-classic
+      nodePackages.prettier
+    ];
+    extraLuaConfig = pkgs.lib.fileContents ./nvim/init.lua;
+  };
 
   programs.direnv = {
     enable = true;
