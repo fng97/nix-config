@@ -143,3 +143,11 @@ end, { desc = "Format code" })
 map("n", "<leader>ud", function()
 	vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
 end, { desc = "Toggle Diagnostics" })
+-- toggle light and dark themes
+vim.keymap.set("n", "<leader>ui", function()
+	if vim.opt.background:get() == "dark" then
+		vim.opt.background = "light"
+	else
+		vim.opt.background = "dark"
+	end
+end, { desc = "Toggle background between light and dark" })
