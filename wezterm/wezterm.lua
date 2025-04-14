@@ -13,9 +13,9 @@ end
 
 function scheme_for_appearance(appearance)
 	if appearance:find("Dark") then
-		return "Gruvbox dark, hard (base16)"
+		return "Catppuccin Frappe"
 	else
-		return "Google Light (base16)"
+		return "Catppuccin Latte"
 	end
 end
 
