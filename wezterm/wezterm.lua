@@ -45,8 +45,8 @@ config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 }
 
 config.keys = {
 	-- splits
-	{ key = "-", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-	{ key = "|", mods = "LEADER|SHIFT", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
+	{ key = "p", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ key = "d", mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
 	-- new windows and tabs
 	{ key = "n", mods = "LEADER", action = wezterm.action.SpawnWindow },
