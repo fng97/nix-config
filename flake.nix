@@ -38,7 +38,7 @@
           home-manager.users.fng = {
             imports = [ ./home.nix ];
             home.sessionVariables.BROWSER = "wslview";
-            home.packages = with pkgs; [ wslu ];
+            home.packages = with pkgs; [ wslu wget ];
           };
         }
       ];
