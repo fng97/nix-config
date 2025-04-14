@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight yanked text",
 })
 
--- THEME
+-- APPEARANCE
 
 require("catppuccin").setup({
 	background = { light = "latte", dark = "frappe" },
@@ -42,6 +42,8 @@ require("lualine").setup({
 		lualine_z = { { "datetime", style = "%d/%m/%y %H:%M:%S" } },
 	},
 })
+
+require("auto-dark-mode").setup({ update_interval = 1000 })
 
 -- FORMATTING
 
@@ -145,11 +147,3 @@ end, { desc = "Format code" })
 map("n", "<leader>ud", function()
 	vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
 end, { desc = "Toggle Diagnostics" })
--- toggle light and dark themes
-vim.keymap.set("n", "<leader>ui", function()
-	if vim.opt.background:get() == "dark" then
-		vim.opt.background = "light"
-	else
-		vim.opt.background = "dark"
-	end
-end, { desc = "Toggle background between light and dark" })

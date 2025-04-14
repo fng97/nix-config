@@ -21,7 +21,7 @@ end
 
 config.color_scheme = scheme_for_appearance(get_appearance())
 config.font = wezterm.font("JetBrains Mono")
-config.font_size = 16
+config.font_size = 15
 config.hide_tab_bar_if_only_one_tab = true
 
 if wezterm.target_triple == "x86_64-pc-windows-msvc" and wezterm.running_under_wsl then
