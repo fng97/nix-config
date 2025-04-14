@@ -34,6 +34,7 @@ require("catppuccin").setup({
 vim.cmd.colorscheme("catppuccin")
 
 require("lualine").setup({
+	options = { globalstatus = true },
 	sections = {
 		lualine_c = { { "buffers", max_length = vim.o.columns * 2 / 3 } },
 		lualine_x = { "progress" },
