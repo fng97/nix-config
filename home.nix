@@ -50,8 +50,10 @@
       nixfmt-classic
       jq
       nodePackages.prettier
-      ruff
       zig
+      ruff
+      nixd
+      python312Packages.python-lsp-server
     ];
 
     extraLuaConfig = pkgs.lib.fileContents ./nvim/init.lua;
