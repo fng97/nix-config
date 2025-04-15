@@ -42,6 +42,7 @@
 
     extraPackages = with pkgs; [
       ripgrep
+      fd
       shfmt
       clang-tools
       cmake-format
@@ -53,6 +54,7 @@
       zig
       ruff
       nixd
+      pyright
       python312Packages.python-lsp-server
     ];
 

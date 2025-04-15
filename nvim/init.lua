@@ -5,6 +5,8 @@ vim.g.maplocalleader = " "
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.termguicolors = true
+vim.opt.scrolloff = 10 -- pad lines around cursor
+vim.opt.breakindent = true -- start with tab in case of line wrap
 vim.opt.undofile = true -- persist undo history
 vim.opt.cmdheight = 0 -- hide command line unless active
 vim.opt.confirm = true -- don't fail silently
@@ -61,14 +63,16 @@ require("auto-dark-mode").setup({ update_interval = 1000 })
 require("lspconfig").clangd.setup({})
 require("lspconfig").ruff.setup({})
 require("lspconfig").pylsp.setup({})
+require("lspconfig").pyright.setup({})
 require("lspconfig").nixd.setup({})
 
 -- FORMATTING
 
 require("conform").setup({
-	format_on_save = {},
+	format_on_save = {}, -- use defaults
 	formatters_by_ft = {
 		_ = { "trim_whitespace", "trim_newlines" },
+		c = { "clang-format" },
 		cpp = { "clang-format" },
 		zig = { "zigfmt" },
 		rust = { "rustfmt" },
@@ -84,80 +88,91 @@ require("conform").setup({
 
 -- KEY MAPPINGS
 
-local map = vim.keymap.set
+local ts = require("telescope.builtin")
 
 -- file operations
-map("n", "<leader>w", ":w<CR>", { desc = "Save file" })
-map("n", "<leader>q", ":q<CR>", { desc = "Quit" })
-map("n", "<leader>wq", ":wq<CR>", { desc = "Save and quit" })
-map("n", "<leader>fn", "<cmd>enew<CR>", { desc = "New File" })
+vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save file" })
+vim.keymap.set("n", "<leader>q", ":q<CR>", { desc = "Quit" })
+vim.keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "Save and quit" })
+vim.keymap.set("n", "<leader>wqa", ":wqa<CR>", { desc = "Save and quit all" })
+vim.keymap.set("n", "<leader>nb", "<cmd>enew<CR>", { desc = "[N]ew [B]uffer" })
 
 -- toggle neo-tree
-map("n", "<leader>e", function()
+vim.keymap.set("n", "<leader>e", function()
 	require("neo-tree.command").execute({
 		toggle = true,
 		reveal = true,
 	})
-end, { desc = "Toggle file tree" })
+end, { desc = "Toggle file [E]xplorer tree" })
 
 -- telescope
-map("n", "<leader><leader>", "<cmd>Telescope find_files<CR>", { desc = "Find files" })
-map("n", "<leader>/", "<cmd>Telescope live_grep<CR>", { desc = "Live grep" })
-map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Find buffers" })
-map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Find help" })
-map("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", { desc = "Find recently opened files" })
-map("n", "<leader>fk", "<cmd>Telescope keymaps<CR>", { desc = "Search keymaps" })
-map("n", "<leader>ff", function()
+vim.keymap.set("n", "<leader><leader>", ts.find_files, { desc = "Search files" })
+vim.keymap.set("n", "<leader>/", ts.live_grep, { desc = "Search content of all files by grep" })
+vim.keymap.set("n", "<leader>sc", ts.oldfiles, { desc = "[S]earch recently [C]losed files" })
+vim.keymap.set("n", "<leader>sg", ts.current_buffer_fuzzy_find, { desc = "[S]earch buffer by [G]rep" })
+vim.keymap.set("n", "<leader>sb", ts.buffers, { desc = "[S]earch [B]uffers" })
+vim.keymap.set("n", "<leader>sh", ts.help_tags, { desc = "[S]earch [H]elp" })
+vim.keymap.set("n", "<leader>sr", ts.resume, { desc = "[S]earch [R]esume (reopen previous search)" })
+vim.keymap.set("n", "<leader>sk", ts.keymaps, { desc = "[S]earch [K]eymaps" })
+vim.keymap.set("n", "<leader>sf", function()
 	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
-end, { desc = "Find all files" })
+end, { desc = "[S]earch all [F]iles (including hidden/ignored)" })
 
 -- navigation
-map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
-map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
-map("n", "<C-u>", "<C-u>zz", { desc = "Page up and center" })
-map("n", "<C-d>", "<C-d>zz", { desc = "Page down and center" })
+vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Page up and center" })
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Page down and center" })
 
--- better visual mode indentation (indent without deselecting)
-map("v", "<", "<gv", { desc = "Indent Left" })
-map("v", ">", ">gv", { desc = "Indent Right" })
+-- windows
+vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+vim.keymap.set("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
+vim.keymap.set("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
+vim.keymap.set("n", "<leader>dw", "<C-W>c", { desc = "[D]elete [W]indow", remap = true })
+vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<CR>", { desc = "Increase Window Height" })
+vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease Window Height" })
+vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease Window Width" })
+vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase Window Width" })
 
--- clear search highlighting
-map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
-
--- window management
-map("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-map("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-map("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-map("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
-map("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
-map("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
-map("n", "<leader>wd", "<C-W>c", { desc = "Delete Window", remap = true })
-
--- resize windows
-map("n", "<C-Up>", "<cmd>resize +2<CR>", { desc = "Increase Window Height" })
-map("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease Window Height" })
-map("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease Window Width" })
-map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase Window Width" })
-
--- buffer management
-map("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Previous Buffer" })
-map("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
-map("n", "<leader>bd", "<cmd>bd<CR>", { desc = "Delete buffer" })
-map("n", "<leader>bo", "<cmd>%bd|e#|bd#<CR>", { desc = "Delete other buffers" })
+-- buffers
+vim.keymap.set("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Previous Buffer" })
+vim.keymap.set("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
+vim.keymap.set("n", "<leader>db", "<cmd>bd<CR>", { desc = "[D]elete [B]uffer" })
+vim.keymap.set("n", "<leader>do", function()
+	local current = vim.api.nvim_get_current_buf()
+	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+		if buf ~= current then
+			vim.api.nvim_buf_delete(buf, { force = true })
+		end
+	end
+end, { desc = "[D]elete [O]ther buffers" })
 
 -- clipboard
-map("n", "<leader>y", '"+y', { desc = "Yank to system clipboard" })
-map("n", "<leader>p", '"+p', { desc = "Paste from system clipboard after cursor" })
-map("n", "<leader>P", '"+P', { desc = "Paste from system clipboard before cursor" })
-map("v", "<leader>y", '"+y', { desc = "Yank selection to system clipboard" })
-map("v", "<leader>p", '"+p', { desc = "Paste selection from system clipboard after cursor" })
-map("v", "<leader>P", '"+P', { desc = "Paste selection from system clipboard before cursor" })
+vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to system clipboard" })
+vim.keymap.set("n", "<leader>p", '"+p', { desc = "Paste from system clipboard after cursor" })
+vim.keymap.set("n", "<leader>yy", '"+yy', { desc = "Yank line to system clipboard" })
+vim.keymap.set("n", "<leader>P", '"+P', { desc = "Paste from system clipboard before cursor" })
+vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank selection to system clipboard" })
+vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste selection from system clipboard after cursor" })
+vim.keymap.set("v", "<leader>P", '"+P', { desc = "Paste selection from system clipboard before cursor" })
 
 -- lsp
-map("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { desc = "Go to declaration" })
-map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "Go to definition" })
+vim.keymap.set("n", "<leader>ss", ts.lsp_workspace_symbols, { desc = "[S]earch [S]ymbols" })
+vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "[R]ename symbol" })
+vim.keymap.set("n", "gd", ts.lsp_definitions, { desc = "[G]oto [D]efinition" })
+vim.keymap.set("n", "gr", ts.lsp_references, { desc = "[G]oto [R]eferences" })
+vim.keymap.set("n", "gcd", vim.diagnostic.setloclist, { desc = "[G]oto [O]pen [C]ode [D]iagnostic" })
+vim.keymap.set("n", "gca", vim.lsp.buf.code_action, { desc = "[G]oto [C]ode [A]ction" })
 
 -- ui
-map("n", "<leader>ud", function()
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
+vim.keymap.set("n", "<leader>ud", function()
 	vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
-end, { desc = "Toggle Diagnostics" })
+end, { desc = "[U]I: Toggle [D]iagnostics" })
+
+-- better visual mode indentation (indent without deselecting)
+vim.keymap.set("v", "<", "<gv", { desc = "Indent Left" })
+vim.keymap.set("v", ">", ">gv", { desc = "Indent Right" })
