@@ -90,22 +90,7 @@ require("conform").setup({
 
 local ts = require("telescope.builtin")
 
--- file operations
-vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save file" })
-vim.keymap.set("n", "<leader>q", ":q<CR>", { desc = "Quit" })
-vim.keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "Save and quit" })
-vim.keymap.set("n", "<leader>wqa", ":wqa<CR>", { desc = "Save and quit all" })
-vim.keymap.set("n", "<leader>nb", "<cmd>enew<CR>", { desc = "[N]ew [B]uffer" })
-
--- toggle neo-tree
-vim.keymap.set("n", "<leader>e", function()
-	require("neo-tree.command").execute({
-		toggle = true,
-		reveal = true,
-	})
-end, { desc = "Toggle file [E]xplorer tree" })
-
--- telescope
+-- search
 vim.keymap.set("n", "<leader><leader>", ts.find_files, { desc = "Search files" })
 vim.keymap.set("n", "<leader>/", ts.live_grep, { desc = "Search content of all files by grep" })
 vim.keymap.set("n", "<leader>sc", ts.oldfiles, { desc = "[S]earch recently [C]losed files" })
@@ -117,18 +102,32 @@ vim.keymap.set("n", "<leader>sk", ts.keymaps, { desc = "[S]earch [K]eymaps" })
 vim.keymap.set("n", "<leader>sf", function()
 	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
 end, { desc = "[S]earch all [F]iles (including hidden/ignored)" })
+vim.keymap.set("n", "<leader>ss", ts.lsp_workspace_symbols, { desc = "[S]earch [S]ymbols" })
 
--- navigation
+-- tweak some defaults
+vim.keymap.set("v", "<", "<gv", { desc = "Indent Left" })
+vim.keymap.set("v", ">", ">gv", { desc = "Indent Right" })
 vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Page up and center" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Page down and center" })
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
 
--- windows
+-- navigation
+vim.keymap.set("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Previous Buffer" })
+vim.keymap.set("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+vim.keymap.set("n", "<leader>e", function()
+	require("neo-tree.command").execute({
+		toggle = true,
+		reveal = true,
+	})
+end, { desc = "UI: Toggle file [E]xplorer tree" })
+
+-- window management
 vim.keymap.set("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
 vim.keymap.set("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
 vim.keymap.set("n", "<leader>dw", "<C-W>c", { desc = "[D]elete [W]indow", remap = true })
@@ -137,9 +136,8 @@ vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease Window 
 vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease Window Width" })
 vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase Window Width" })
 
--- buffers
-vim.keymap.set("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Previous Buffer" })
-vim.keymap.set("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
+-- buffer management
+vim.keymap.set("n", "<leader>nb", "<cmd>enew<CR>", { desc = "[N]ew [B]uffer" })
 vim.keymap.set("n", "<leader>db", "<cmd>bd<CR>", { desc = "[D]elete [B]uffer" })
 vim.keymap.set("n", "<leader>do", function()
 	local current = vim.api.nvim_get_current_buf()
@@ -159,20 +157,14 @@ vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank selection to system clipb
 vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste selection from system clipboard after cursor" })
 vim.keymap.set("v", "<leader>P", '"+P', { desc = "Paste selection from system clipboard before cursor" })
 
--- lsp
-vim.keymap.set("n", "<leader>ss", ts.lsp_workspace_symbols, { desc = "[S]earch [S]ymbols" })
+-- lsp goodies
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "[R]ename symbol" })
 vim.keymap.set("n", "gd", ts.lsp_definitions, { desc = "[G]oto [D]efinition" })
 vim.keymap.set("n", "gr", ts.lsp_references, { desc = "[G]oto [R]eferences" })
-vim.keymap.set("n", "gcd", vim.diagnostic.setloclist, { desc = "[G]oto [O]pen [C]ode [D]iagnostic" })
+vim.keymap.set("n", "gcd", vim.diagnostic.setloclist, { desc = "[G]oto [C]ode [D]iagnostic" })
 vim.keymap.set("n", "gca", vim.lsp.buf.code_action, { desc = "[G]oto [C]ode [A]ction" })
 
--- ui
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
+-- ui options
 vim.keymap.set("n", "<leader>ud", function()
 	vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
 end, { desc = "[U]I: Toggle [D]iagnostics" })
-
--- better visual mode indentation (indent without deselecting)
-vim.keymap.set("v", "<", "<gv", { desc = "Indent Left" })
-vim.keymap.set("v", ">", ">gv", { desc = "Indent Right" })
