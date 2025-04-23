@@ -46,6 +46,7 @@
       shfmt
       clang-tools
       cmake-format
+      rust-analyzer
       stylua
       rustfmt
       nixfmt-classic

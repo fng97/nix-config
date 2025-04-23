@@ -61,6 +61,7 @@ require("auto-dark-mode").setup({ update_interval = 1000 })
 
 -- vim.lsp.enable("clangd") -- FIXME: below is legacy, switch to this style once upgraded to nvim 0.11+
 require("lspconfig").clangd.setup({})
+require("lspconfig").rust_analyzer.setup({})
 require("lspconfig").ruff.setup({})
 require("lspconfig").pylsp.setup({})
 require("lspconfig").pyright.setup({})
