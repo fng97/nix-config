@@ -39,23 +39,12 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- APPEARANCE
 
-require("catppuccin").setup({
-	background = { light = "latte", dark = "frappe" },
-})
+require("catppuccin").setup({ background = { light = "latte", dark = "frappe" } })
+require("lualine").setup({ options = { globalstatus = true }, sections = { lualine_x = { "searchcount" } } })
+require("auto-dark-mode").setup({ update_interval = 1000 })
+require("gitsigns").setup({})
 
 vim.cmd.colorscheme("catppuccin")
-
-require("lualine").setup({
-	options = { globalstatus = true },
-	sections = {
-		lualine_c = { { "buffers", max_length = vim.o.columns * 2 / 3 } },
-		lualine_x = { "searchcount", "progress" },
-		lualine_y = { "location" },
-		lualine_z = { { "datetime", style = "%d/%m/%y %H:%M" } },
-	},
-})
-
-require("auto-dark-mode").setup({ update_interval = 1000 })
 
 -- LSP
 
@@ -122,10 +111,7 @@ vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = tr
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 vim.keymap.set("n", "<leader>e", function()
-	require("neo-tree.command").execute({
-		toggle = true,
-		reveal = true,
-	})
+	require("neo-tree.command").execute({ toggle = true, reveal = true })
 end, { desc = "UI: Toggle file [E]xplorer tree" })
 
 -- window management

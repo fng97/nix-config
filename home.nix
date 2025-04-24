@@ -38,6 +38,7 @@
       lualine-nvim
       nvim-lspconfig
       auto-dark-mode-nvim
+      gitsigns-nvim
     ];
 
     extraPackages = with pkgs; [
