@@ -9,68 +9,82 @@
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, nixos-wsl, ... }: {
-    nixosConfigurations.wsl = let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [
-        nixos-wsl.nixosModules.default
-        {
-          system.stateVersion = "24.05";
-          nix.settings.experimental-features = [ "flakes nix-command" ];
-          wsl.enable = true;
-          wsl.defaultUser = "fng";
-          wsl.startMenuLaunchers = true;
-          users.defaultUserShell = pkgs.fish;
-          users.users.fng.extraGroups = [ "docker" ];
-          programs.fish.enable = true;
-          programs.nix-ld.enable = true;
-          virtualisation.docker.enable = true;
-        }
+  outputs = { self, nixpkgs, home-manager, nix-darwin, nixos-wsl, ... }:
+    let
+      secrets =
+        builtins.fromJSON (builtins.readFile "${self}/secrets/secrets.json");
+    in {
+      nixosConfigurations.wsl = let
+        system = "x86_64-linux";
+        pkgs = nixpkgs.legacyPackages.${system};
+      in nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          nixos-wsl.nixosModules.default
+          {
+            system.stateVersion = "24.05";
+            nix.settings.experimental-features = [ "flakes nix-command" ];
+            wsl.enable = true;
+            wsl.defaultUser = "fng";
+            wsl.startMenuLaunchers = true;
+            users.defaultUserShell = pkgs.fish;
+            users.users.fng.extraGroups = [ "docker" ];
+            programs.fish.enable = true;
+            programs.nix-ld.enable = true;
+            virtualisation.docker.enable = true;
+          }
 
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.extraSpecialArgs = { inherit pkgs; };
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.fng = {
-            imports = [ ./home.nix ];
-            home.sessionVariables.BROWSER = "wslview";
-            home.packages = with pkgs; [ wslu wget ];
-          };
-        }
-      ];
-    };
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = { inherit pkgs; };
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.fng = {
+              imports = [ ./home.nix ];
+              home.sessionVariables.BROWSER = "wslview";
+              home.packages = with pkgs; [ wslu wget ];
+            };
+          }
+        ];
+      };
 
-    darwinConfigurations.macbook = let
-      system = "aarch64-darwin";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in nix-darwin.lib.darwinSystem {
-      inherit system;
-      modules = [
-        {
-          system.stateVersion = 5;
-          environment.systemPackages = with pkgs; [ tailscale wezterm ];
-          services.tailscale.enable = true;
-          nix.settings.experimental-features = "nix-command flakes";
-          programs.fish.enable = true;
-          system.configurationRevision = self.rev or self.dirtyRev or null;
-          users.users.fng.home = "/Users/fng";
-          users.users.fng.shell = pkgs.fish;
-        }
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.extraSpecialArgs = { inherit pkgs; };
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.fng = {
-            imports = [ ./home.nix ];
-            home.sessionVariables.BROWSER = "open";
-          };
-        }
-      ];
+      darwinConfigurations.macbook = let
+        system = "aarch64-darwin";
+        pkgs = nixpkgs.legacyPackages.${system};
+      in nix-darwin.lib.darwinSystem {
+        inherit system;
+        modules = [
+          {
+            system.stateVersion = 5;
+            environment.systemPackages = with pkgs; [ tailscale wezterm ];
+            services.tailscale.enable = true;
+            nix.settings.experimental-features = "nix-command flakes";
+            programs.fish.enable = true;
+            system.configurationRevision = self.rev or self.dirtyRev or null;
+            users.users.fng.home = "/Users/fng";
+            users.users.fng.shell = pkgs.fish;
+          }
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.extraSpecialArgs = { inherit pkgs; };
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.fng = {
+              imports = [ ./home.nix ];
+              home.sessionVariables.BROWSER = "open";
+            };
+          }
+        ];
+      };
+
+      nixosConfigurations.server = let
+        system = "x86_64-linux";
+        pkgs = nixpkgs.legacyPackages.${system};
+      in nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          (import ./hosts/server/configuration.nix { inherit pkgs secrets; })
+        ];
+      };
     };
-  };
 }
