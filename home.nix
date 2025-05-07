@@ -58,6 +58,7 @@
       nixd
       pyright
       python312Packages.python-lsp-server
+      marksman
     ];
 
     extraLuaConfig = pkgs.lib.fileContents ./nvim/init.lua;

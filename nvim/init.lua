@@ -55,6 +55,7 @@ require("lspconfig").ruff.setup({})
 require("lspconfig").pylsp.setup({})
 require("lspconfig").pyright.setup({})
 require("lspconfig").nixd.setup({})
+require("lspconfig").marksman.setup({})
 
 -- FORMATTING
 
