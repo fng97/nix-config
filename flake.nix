@@ -7,9 +7,13 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nixos-wsl.url = "github:nix-community/NixOS-WSL";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
+    # discord bot: see host 'server' below
+    adventus.url = "github:fng97/adventus";
+    adventus.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, nixos-wsl, ... }:
+  outputs =
+    { self, nixpkgs, home-manager, nix-darwin, nixos-wsl, adventus, ... }:
     let
       secrets =
         builtins.fromJSON (builtins.readFile "${self}/secrets/secrets.json");
@@ -24,6 +28,8 @@
           {
             system.stateVersion = "24.05";
             nix.settings.experimental-features = [ "flakes nix-command" ];
+            environment.systemPackages = [ pkgs.tailscale ];
+            services.tailscale.enable = true;
             wsl.enable = true;
             wsl.defaultUser = "fng";
             wsl.startMenuLaunchers = true;
@@ -77,13 +83,36 @@
         ];
       };
 
-      nixosConfigurations.server = let
+      nixosConfigurations.server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        pkgs = nixpkgs.legacyPackages.${system};
-      in nixpkgs.lib.nixosSystem {
-        inherit system;
+        specialArgs = { inherit secrets adventus; };
+        modules = [ ./hosts/server/configuration.nix ];
+      };
+
+      nixosConfigurations.testvm = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
         modules = [
-          (import ./hosts/server/configuration.nix { inherit pkgs secrets; })
+          adventus.nixosModule
+          ({ pkgs, ... }: {
+            fileSystems."/".label = "vmdisk"; # root filesystem label for QEMU
+            networking.hostName = "vmhost";
+
+            users.groups.vm = { };
+            users.extraUsers.vm = {
+              isNormalUser = true;
+              password = "vm";
+              shell = pkgs.bash;
+              group = "vm";
+              extraGroups = [ "wheel" ];
+            };
+            security.sudo.enable = true;
+            security.sudo.wheelNeedsPassword = false;
+
+            services.adventus = {
+              enable = true;
+              discordToken = secrets.adventus.discordToken;
+            };
+          })
         ];
       };
     };
