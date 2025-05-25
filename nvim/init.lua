@@ -48,14 +48,14 @@ vim.cmd.colorscheme("catppuccin")
 
 -- LSP
 
--- vim.lsp.enable("clangd") -- FIXME: below is legacy, switch to this style once upgraded to nvim 0.11+
-require("lspconfig").clangd.setup({})
-require("lspconfig").rust_analyzer.setup({})
-require("lspconfig").ruff.setup({})
-require("lspconfig").pylsp.setup({})
-require("lspconfig").pyright.setup({})
-require("lspconfig").nixd.setup({})
-require("lspconfig").marksman.setup({})
+vim.lsp.enable("clangd")
+vim.lsp.enable("rust_analyzer")
+vim.lsp.enable("ruff")
+vim.lsp.enable("pylsp")
+vim.lsp.enable("pyright")
+vim.lsp.enable("nixd")
+vim.lsp.enable("marksman")
+vim.lsp.enable("zls")
 
 -- FORMATTING
 

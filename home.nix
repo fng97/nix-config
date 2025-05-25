@@ -8,7 +8,7 @@
   programs.starship.enable = true;
   programs.fish.enable = true;
 
-  home.packages = with pkgs; [ tlrc lazygit gh television htop git-crypt ];
+  home.packages = with pkgs; [ tlrc lazygit gh television htop git-crypt zig ];
 
   home.file.".config/wezterm" = {
     source = ./wezterm;
@@ -53,7 +53,6 @@
       nixfmt-classic
       jq
       nodePackages.prettier
-      zig
       ruff
       nixd
       pyright
