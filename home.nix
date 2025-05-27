@@ -8,7 +8,16 @@
   programs.starship.enable = true;
   programs.fish.enable = true;
 
-  home.packages = with pkgs; [ tlrc lazygit gh television htop git-crypt zig ];
+  home.packages = with pkgs; [
+    tlrc
+    lazygit
+    gh
+    television
+    htop
+    git-crypt
+    zig
+    zls
+  ];
 
   home.file.".config/wezterm" = {
     source = ./wezterm;
