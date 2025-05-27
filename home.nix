@@ -1,6 +1,18 @@
 { pkgs, ... }:
 
-{
+let
+  jrnl = pkgs.stdenv.mkDerivation {
+    name = "jrnl";
+    src = ./jrnl.zig;
+    dontUnpack = true;
+    nativeBuildInputs = [ pkgs.zig ];
+    # The global Zig cache dir is not accessible in the sandbox so we use "./cache".
+    installPhase = ''
+      mkdir -p $out/bin .cache
+      zig build-exe --global-cache-dir .cache -O ReleaseSafe -femit-bin=$out/bin/jrnl $src
+    '';
+  };
+in {
   home.stateVersion = "24.05";
   home.username = "fng";
   home.sessionVariables.SHELL = "${pkgs.fish}/bin/fish";
@@ -11,6 +23,7 @@
   home.packages = with pkgs; [
     tlrc
     lazygit
+    jrnl
     gh
     television
     htop
