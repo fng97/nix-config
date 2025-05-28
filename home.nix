@@ -80,6 +80,7 @@ in {
       pyright
       python312Packages.python-lsp-server
       marksman
+      lua-language-server
     ];
 
     extraLuaConfig = pkgs.lib.fileContents ./nvim/init.lua;

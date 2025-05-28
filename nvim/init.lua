@@ -4,15 +4,14 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.termguicolors = true
 vim.opt.scrolloff = 10 -- pad lines around cursor
-vim.opt.breakindent = true -- start with tab in case of line wrap
 vim.opt.undofile = true -- persist undo history
 vim.opt.cmdheight = 0 -- hide command line unless active
 vim.opt.confirm = true -- don't fail silently
 vim.opt.ignorecase = true -- ignore case when searching...
 vim.opt.smartcase = true -- unless uppercase used in search
-vim.opt.textwidth = 120 -- break lines at 120
+vim.opt.textwidth = 100 -- break lines at 100
+vim.opt.breakindent = true -- start with tab in case of line wrap
 vim.opt.tabstop = 2 -- a tab character is displayed as 2 spaces
 vim.opt.softtabstop = 2 -- pressing tab inserts 2 spaces
 vim.opt.shiftwidth = 2 -- indentation uses 2 spaces
@@ -37,18 +36,32 @@ vim.api.nvim_create_autocmd("FileType", {
 	desc = "Set comment style to '//' for C and C++ (default is '/**/')",
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "markdown",
+	callback = function()
+		vim.opt_local.spell = true
+		vim.opt_local.spelllang = "en_gb"
+	end,
+	desc = "Enable spell check in Markdown",
+})
+
 -- APPEARANCE
 
 require("catppuccin").setup({ background = { light = "latte", dark = "frappe" } })
-require("lualine").setup({ options = { globalstatus = true }, sections = { lualine_x = { "searchcount" } } })
 require("auto-dark-mode").setup({ update_interval = 1000 })
 require("gitsigns").setup({})
+
+require("lualine").setup({
+	options = { globalstatus = true },
+	sections = { lualine_x = { "searchcount" } },
+})
 
 vim.cmd.colorscheme("catppuccin")
 
 -- LSP
 
 vim.lsp.enable("clangd")
+vim.lsp.enable("cmake")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("ruff")
 vim.lsp.enable("pylsp")
@@ -56,11 +69,20 @@ vim.lsp.enable("pyright")
 vim.lsp.enable("nixd")
 vim.lsp.enable("marksman")
 vim.lsp.enable("zls")
+vim.lsp.enable("lua_ls")
+
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			diagnostics = { globals = { "vim" } },
+		},
+	},
+})
 
 -- FORMATTING
 
 require("conform").setup({
-	format_on_save = {}, -- use defaults
+	format_on_save = { lsp_format = "never" },
 	formatters_by_ft = {
 		_ = { "trim_whitespace", "trim_newlines" },
 		c = { "clang-format" },
@@ -84,11 +106,8 @@ local ts = require("telescope.builtin")
 -- search
 vim.keymap.set("n", "<leader><leader>", ts.find_files, { desc = "Search files" })
 vim.keymap.set("n", "<leader>/", ts.live_grep, { desc = "Search content of all files by grep" })
-vim.keymap.set("n", "<leader>sc", ts.oldfiles, { desc = "[S]earch recently [C]losed files" })
-vim.keymap.set("n", "<leader>sg", ts.current_buffer_fuzzy_find, { desc = "[S]earch buffer by [G]rep" })
-vim.keymap.set("n", "<leader>sb", ts.buffers, { desc = "[S]earch [B]uffers" })
 vim.keymap.set("n", "<leader>sh", ts.help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sr", ts.resume, { desc = "[S]earch [R]esume (reopen previous search)" })
+vim.keymap.set("n", "<leader>sr", ts.resume, { desc = "[S]earch [R]esume (reopen prior search)" })
 vim.keymap.set("n", "<leader>sk", ts.keymaps, { desc = "[S]earch [K]eymaps" })
 vim.keymap.set("n", "<leader>sf", function()
 	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
@@ -98,8 +117,16 @@ vim.keymap.set("n", "<leader>ss", ts.lsp_workspace_symbols, { desc = "[S]earch [
 -- tweak some defaults
 vim.keymap.set("v", "<", "<gv", { desc = "Indent Left" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent Right" })
-vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
-vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", {
+	desc = "Go down a line (works on wrapped lines)",
+	expr = true,
+	silent = true,
+})
+vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", {
+	desc = "Go up a line (works on wrapped lines)",
+	expr = true,
+	silent = true,
+})
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Page up and center" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Page down and center" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
@@ -140,17 +167,15 @@ end, { desc = "[D]elete [O]ther buffers" })
 vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to system clipboard" })
 vim.keymap.set("n", "<leader>p", '"+p', { desc = "Paste from system clipboard after cursor" })
 vim.keymap.set("n", "<leader>yy", '"+yy', { desc = "Yank line to system clipboard" })
-vim.keymap.set("n", "<leader>P", '"+P', { desc = "Paste from system clipboard before cursor" })
 vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank selection to system clipboard" })
-vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste selection from system clipboard after cursor" })
-vim.keymap.set("v", "<leader>P", '"+P', { desc = "Paste selection from system clipboard before cursor" })
+vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste to selection from system clipboard" })
 
 -- lsp goodies
-vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "[R]ename symbol" })
+vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "[C]ode: [R]ename symbol" })
+vim.keymap.set("n", "<leader>cd", vim.diagnostic.setloclist, { desc = "Open [C]ode [D]iagnostics" })
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Open [C]ode [A]ction" })
 vim.keymap.set("n", "gd", ts.lsp_definitions, { desc = "[G]oto [D]efinition" })
 vim.keymap.set("n", "gr", ts.lsp_references, { desc = "[G]oto [R]eferences" })
-vim.keymap.set("n", "gcd", vim.diagnostic.setloclist, { desc = "[G]oto [C]ode [D]iagnostic" })
-vim.keymap.set("n", "gca", vim.lsp.buf.code_action, { desc = "[G]oto [C]ode [A]ction" })
 
 -- ui options
 vim.keymap.set("n", "<leader>ud", function()
