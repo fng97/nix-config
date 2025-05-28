@@ -61,6 +61,7 @@ in {
       nvim-lspconfig
       auto-dark-mode-nvim
       gitsigns-nvim
+      smart-splits-nvim
     ];
 
     extraPackages = with pkgs; [

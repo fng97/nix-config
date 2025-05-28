@@ -80,6 +80,7 @@ require("conform").setup({
 -- KEY MAPPINGS
 
 local ts = require("telescope.builtin")
+local ss = require("smart-splits")
 
 -- search
 vim.keymap.set("n", "<leader><leader>", ts.find_files, { desc = "Search files" })
@@ -107,10 +108,10 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highl
 -- navigation
 vim.keymap.set("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Previous Buffer" })
 vim.keymap.set("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+vim.keymap.set("n", "<C-h>", ss.move_cursor_left)
+vim.keymap.set("n", "<C-j>", ss.move_cursor_down)
+vim.keymap.set("n", "<C-k>", ss.move_cursor_up)
+vim.keymap.set("n", "<C-l>", ss.move_cursor_right)
 vim.keymap.set("n", "<leader>e", function()
 	require("neo-tree.command").execute({ toggle = true, reveal = true })
 end, { desc = "UI: Toggle file [E]xplorer tree" })
@@ -119,10 +120,10 @@ end, { desc = "UI: Toggle file [E]xplorer tree" })
 vim.keymap.set("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
 vim.keymap.set("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
 vim.keymap.set("n", "<leader>dw", "<C-W>c", { desc = "[D]elete [W]indow", remap = true })
-vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<CR>", { desc = "Increase Window Height" })
-vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease Window Height" })
-vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease Window Width" })
-vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase Window Width" })
+vim.keymap.set("n", "<C-Left>", ss.resize_left)
+vim.keymap.set("n", "<C-Down>", ss.resize_down)
+vim.keymap.set("n", "<C-Up>", ss.resize_up)
+vim.keymap.set("n", "<C-Right>", ss.resize_right)
 
 -- buffer management
 vim.keymap.set("n", "<leader>nb", "<cmd>enew<CR>", { desc = "[N]ew [B]uffer" })
