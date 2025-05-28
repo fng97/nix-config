@@ -1,34 +1,22 @@
 -- For WSL: Copy this to ~/.config/wezterm (Windows user)
 
-local wezterm = require("wezterm")
+local w = require("wezterm")
 
-local config = {}
+local config = w.config_builder()
 
-function get_appearance()
-	if wezterm.gui then
-		return wezterm.gui.get_appearance()
-	end
-	return "Dark"
-end
-
-function scheme_for_appearance(appearance)
-	if appearance:find("Dark") then
-		return "Catppuccin Frappe"
-	else
-		return "Catppuccin Latte"
-	end
-end
-
-local font = wezterm.font("JetBrains Mono")
-
-config.color_scheme = scheme_for_appearance(get_appearance())
-config.font = font
+config.font = w.font("JetBrains Mono")
 config.font_size = 15
-config.hide_tab_bar_if_only_one_tab = true
-config.tab_max_width = 32
-config.use_fancy_tab_bar = false
+config.window_decorations = "INTEGRATED_BUTTONS"
 
-if wezterm.target_triple == "x86_64-pc-windows-msvc" and wezterm.running_under_wsl then
+-- Switch between light and dark themes based on system theme.
+if w.gui.get_appearance():find("Dark") then
+	config.color_scheme = "Catppuccin Frappe"
+else
+	config.color_scheme = "Catppuccin Latte"
+end
+
+-- On Windows, use NixOS-WSL and launch the fish shell.
+if w.target_triple == "x86_64-pc-windows-msvc" and wezterm.running_under_wsl then
 	config.wsl_domains = {
 		{
 			name = "WSL:NixOS",
@@ -41,27 +29,44 @@ else
 	config.default_prog = { "/etc/profiles/per-user/fng/bin/fish" }
 end
 
+-- ALT + hjkl pane movement (fallback to tab switching on l/h)
+local function alt_nav(key)
+	local direction_keys = {
+		h = "Left",
+		j = "Down",
+		k = "Up",
+		l = "Right",
+	}
+	local direction = direction_keys[key]
+
+	return {
+		key = key,
+		mods = "ALT",
+		action = w.action_callback(function(win, pane)
+			local tab = win:active_tab()
+
+			-- If no pane exists in a given direction we're at the edge of the window. In this case fall back
+			-- to moving tabs in that direction.
+			if tab:get_pane_direction(direction) then
+				win:perform_action({ ActivatePaneDirection = direction }, pane)
+			else
+				-- This questionable ternary syntax means go left on "h" else go right
+				win:perform_action({ ActivateTabRelative = key == "h" and -1 or 1 }, pane)
+			end
+		end),
+	}
+end
+
 config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 }
 
 config.keys = {
-	-- splits
-	{ key = "p", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-	{ key = "d", mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
+	{ key = "|", mods = "LEADER", action = w.action.SplitHorizontal },
+	{ key = "-", mods = "LEADER", action = w.action.SplitVertical },
 
-	-- new windows and tabs
-	{ key = "n", mods = "LEADER", action = wezterm.action.SpawnWindow },
-	{ key = "t", mods = "LEADER", action = wezterm.action.SpawnTab("DefaultDomain") },
-	{ key = "q", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
-
-	-- navigation between splits
-	{ key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") },
-	{ key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") },
-	{ key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") },
-	{ key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") },
-
-	-- navigation between tabs
-	{ key = "h", mods = "LEADER|CTRL", action = wezterm.action.ActivateTabRelative(-1) },
-	{ key = "l", mods = "LEADER|CTRL", action = wezterm.action.ActivateTabRelative(1) },
+	alt_nav("h"),
+	alt_nav("j"),
+	alt_nav("k"),
+	alt_nav("l"),
 }
 
 return config
