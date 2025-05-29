@@ -41,12 +41,7 @@ pub fn main() !void {
     };
 
     if (!file_exists) {
-        const header = try run_cmd(allocator, &[_][]const u8{
-            "date",
-            "-d",
-            date_string,
-            "+# %A, %-d %B %Y",
-        });
+        const header = try run_cmd(allocator, &[_][]const u8{ "date", "+# %A, %-d %B %Y" });
 
         std.debug.print("Writing new header to file: {s}\n", .{header});
 
