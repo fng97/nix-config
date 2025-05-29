@@ -16,7 +16,7 @@ else
 end
 
 -- On Windows, use NixOS-WSL and launch the fish shell.
-if w.target_triple == "x86_64-pc-windows-msvc" and wezterm.running_under_wsl then
+if w.target_triple == "x86_64-pc-windows-msvc" and w.running_under_wsl then
 	config.wsl_domains = {
 		{
 			name = "WSL:NixOS",
