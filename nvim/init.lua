@@ -61,13 +61,10 @@ vim.cmd.colorscheme("catppuccin")
 -- LSP
 
 vim.lsp.enable("clangd")
-vim.lsp.enable("cmake")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("ruff")
 vim.lsp.enable("pylsp")
-vim.lsp.enable("pyright")
 vim.lsp.enable("nixd")
-vim.lsp.enable("marksman")
 vim.lsp.enable("zls")
 vim.lsp.enable("lua_ls")
 
@@ -105,14 +102,12 @@ local ts = require("telescope.builtin")
 
 -- search
 vim.keymap.set("n", "<leader><leader>", ts.find_files, { desc = "Search files" })
-vim.keymap.set("n", "<leader>/", ts.live_grep, { desc = "Search content of all files by grep" })
+vim.keymap.set("n", "<leader>/", ts.live_grep, { desc = "Grep files" })
 vim.keymap.set("n", "<leader>sh", ts.help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sr", ts.resume, { desc = "[S]earch [R]esume (reopen prior search)" })
 vim.keymap.set("n", "<leader>sk", ts.keymaps, { desc = "[S]earch [K]eymaps" })
 vim.keymap.set("n", "<leader>sf", function()
 	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
-end, { desc = "[S]earch all [F]iles (including hidden/ignored)" })
-vim.keymap.set("n", "<leader>ss", ts.lsp_workspace_symbols, { desc = "[S]earch [S]ymbols" })
+end, { desc = "[S]earch [F]iles (including hidden/ignored)" })
 
 -- tweak some defaults
 vim.keymap.set("v", "<", "<gv", { desc = "Indent Left" })

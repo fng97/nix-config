@@ -77,11 +77,8 @@ in {
       nodePackages.prettier
       ruff
       nixd
-      pyright
       python312Packages.python-lsp-server
-      marksman
       lua-language-server
-      cmake-language-server
     ];
 
     extraLuaConfig = pkgs.lib.fileContents ./nvim/init.lua;
