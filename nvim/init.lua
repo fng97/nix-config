@@ -93,6 +93,8 @@ require("conform").setup({
 		nix = { "nixfmt" },
 		markdown = { "prettier" },
 		json = { "jq" },
+		html = { "prettier" },
+		css = { "prettier" },
 	},
 })
 
