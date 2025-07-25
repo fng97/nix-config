@@ -45,6 +45,24 @@ vim.api.nvim_create_autocmd("FileType", {
 	desc = "Enable spell check in Markdown",
 })
 
+-- This provides "hot reloads" when I'm working on a blog post. It's only enabled when working in
+-- the "website" repo on macOS.
+if vim.fn.getcwd():match("website$") and vim.fn.has("mac") then
+	vim.api.nvim_create_autocmd("BufWritePost", {
+		pattern = "content/*.md", -- only when editing pages
+		callback = function()
+			local html_path = "zig-out/" .. vim.fn.expand("%:t:r") .. ".html"
+			vim.system({ "zig", "build", "reload", "--", html_path }, { text = true }, function(result)
+				if result.code == 0 then
+					print("✅ Web page hot-reloaded")
+				else
+					print("❌ Hot reload failed\n" .. (result.stderr or ""))
+				end
+			end)
+		end,
+	})
+end
+
 -- APPEARANCE
 
 require("catppuccin").setup({ background = { light = "latte", dark = "frappe" } })
