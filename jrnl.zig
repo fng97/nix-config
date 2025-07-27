@@ -8,8 +8,9 @@ pub fn main() !void {
 
     const journal_dir_path = try std.fs.path.join(allocator, &[_][]const u8{
         std.posix.getenv("HOME").?,
-        "notes",
-        "journal",
+        "src",
+        "notebook",
+        "journaling",
     });
 
     std.debug.print("Journal directory: {s}\n", .{journal_dir_path});
