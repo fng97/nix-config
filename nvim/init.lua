@@ -48,7 +48,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- This provides "hot reloads" when I'm working on a blog post. It's only enabled when working in
 -- the "website" repo on macOS.
-if vim.fn.getcwd():match("website$") and vim.fn.has("mac") then
+if vim.fn.getcwd():match("website$") and vim.fn.has("mac") == 1 then
 	vim.api.nvim_create_autocmd("BufWritePost", {
 		pattern = "content/*.md", -- only when editing pages
 		callback = function()
