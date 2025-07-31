@@ -38,7 +38,7 @@ in {
   };
 
   programs.neovim = let
-    auto-dark-mode-nvim = pkgs.vimUtils.buildVimPlugin {
+    auto-dark-mode = pkgs.vimUtils.buildVimPlugin {
       name = "auto-dark-mode.nvim";
       src = pkgs.fetchFromGitHub {
         owner = "f-person";
@@ -47,17 +47,26 @@ in {
         sha256 = "sha256-ZCViqnA+VoEOG+Xr+aJNlfRKCjxJm5y78HRXax3o8UY=";
       };
     };
+    vscode-theme = pkgs.vimUtils.buildVimPlugin {
+      name = "vscode.nvim";
+      src = pkgs.fetchFromGitHub {
+        owner = "Mofiqul";
+        repo = "vscode.nvim";
+        rev = "4d1c3c64d1afddd7934fb0e687fd9557fc66be41";
+        sha256 = "sha256-y0qtA7cGkzT+OqnvRfZhyvKgAS1PdkdvElsHEErAhyo=";
+      };
+    };
   in {
     enable = true;
     defaultEditor = true;
 
     plugins = with pkgs.vimPlugins; [
-      catppuccin-nvim
+      auto-dark-mode
+      vscode-theme
       nvim-treesitter.withAllGrammars
       telescope-nvim
       conform-nvim
       nvim-lspconfig
-      auto-dark-mode-nvim
     ];
 
     extraPackages = with pkgs; [

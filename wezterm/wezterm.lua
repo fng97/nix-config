@@ -10,9 +10,9 @@ config.window_decorations = "INTEGRATED_BUTTONS"
 
 -- Switch between light and dark themes based on system theme.
 if w.gui.get_appearance():find("Dark") then
-	config.color_scheme = "Catppuccin Frappe"
+	config.color_scheme = "vscode-dark"
 else
-	config.color_scheme = "Catppuccin Latte"
+	config.color_scheme = "vscode-light"
 end
 
 -- On Windows, use NixOS-WSL and launch the fish shell.

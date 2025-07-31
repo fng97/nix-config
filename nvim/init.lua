@@ -66,10 +66,9 @@ end
 
 -- APPEARANCE
 
-require("catppuccin").setup({ background = { light = "latte", dark = "frappe" } })
-require("auto-dark-mode").setup({ update_interval = 1000 })
-
-vim.cmd.colorscheme("catppuccin")
+require("auto-dark-mode").setup()
+require("vscode").setup()
+vim.cmd.colorscheme("vscode")
 
 -- LSP
 
