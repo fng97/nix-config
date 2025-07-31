@@ -4,6 +4,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.laststatus = 0 -- hide status line
 vim.opt.scrolloff = 10 -- pad lines around cursor
 vim.opt.undofile = true -- persist undo history
 vim.opt.cmdheight = 0 -- hide command line unless active
@@ -67,12 +68,6 @@ end
 
 require("catppuccin").setup({ background = { light = "latte", dark = "frappe" } })
 require("auto-dark-mode").setup({ update_interval = 1000 })
-require("gitsigns").setup({})
-
-require("lualine").setup({
-	options = { globalstatus = true },
-	sections = { lualine_x = { "searchcount" } },
-})
 
 vim.cmd.colorscheme("catppuccin")
 
@@ -190,13 +185,8 @@ vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste to selection from system
 
 -- IDE goodies
 vim.keymap.set("n", "gd", ts.lsp_definitions, { desc = "[G]oto [D]efinition" })
-vim.keymap.set("n", "<leader>gb", require("gitsigns").blame_line, { desc = "[G]it [B]lame" })
-vim.keymap.set("n", "<leader>gB", require("gitsigns").blame, { desc = "[G]it [B]lame (window)" })
 
 -- ui options
 vim.keymap.set("n", "<leader>ud", function()
 	vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
 end, { desc = "[U]I: Toggle [D]iagnostics" })
-vim.keymap.set("n", "<leader>e", function()
-	require("neo-tree.command").execute({ toggle = true, reveal = true })
-end, { desc = "UI: Toggle file [E]xplorer tree" })

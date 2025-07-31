@@ -56,11 +56,8 @@ in {
       nvim-treesitter.withAllGrammars
       telescope-nvim
       conform-nvim
-      neo-tree-nvim
-      lualine-nvim
       nvim-lspconfig
       auto-dark-mode-nvim
-      gitsigns-nvim
     ];
 
     extraPackages = with pkgs; [
