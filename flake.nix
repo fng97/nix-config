@@ -7,13 +7,14 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nixos-wsl.url = "github:nix-community/NixOS-WSL";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
-    # discord bot: see host 'server' below
     adventus.url = "github:fng97/adventus";
     adventus.inputs.nixpkgs.follows = "nixpkgs";
+    website.url = "github:fng97/website";
+    website.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs =
-    { self, nixpkgs, home-manager, nix-darwin, nixos-wsl, adventus, ... }:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, nixos-wsl, adventus
+    , website, ... }:
     let
       secrets =
         builtins.fromJSON (builtins.readFile "${self}/secrets/secrets.json");
@@ -85,14 +86,13 @@
 
       nixosConfigurations.server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit secrets adventus; };
+        specialArgs = { inherit secrets adventus website; };
         modules = [ ./hosts/server/configuration.nix ];
       };
 
       nixosConfigurations.testvm = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          adventus.nixosModule
           ({ pkgs, ... }: {
             fileSystems."/".label = "vmdisk"; # root filesystem label for QEMU
             networking.hostName = "vmhost";
@@ -113,6 +113,9 @@
               discordToken = secrets.adventus.discordToken;
             };
           })
+
+          adventus.nixosModule
+          website.nixosModule
         ];
       };
     };
