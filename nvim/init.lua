@@ -177,9 +177,12 @@ end, { desc = "Delete [O]ther [B]uffers" })
 
 -- clipboard
 vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to system clipboard" })
+vim.keymap.set("n", "<leader>d", '"+d', { desc = "Delete to system clipboard" })
 vim.keymap.set("n", "<leader>p", '"+p', { desc = "Paste from system clipboard after cursor" })
 vim.keymap.set("n", "<leader>yy", '"+yy', { desc = "Yank line to system clipboard" })
+vim.keymap.set("n", "<leader>dd", '"+dd', { desc = "Delete line to system clipboard" })
 vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank selection to system clipboard" })
+vim.keymap.set("v", "<leader>d", '"+d', { desc = "Delete selection to system clipboard" })
 vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste to selection from system clipboard" })
 
 -- IDE goodies
