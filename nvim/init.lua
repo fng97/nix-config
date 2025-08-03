@@ -72,13 +72,15 @@ vim.cmd.colorscheme("vscode")
 
 -- LSP
 
-vim.lsp.enable("clangd")
-vim.lsp.enable("rust_analyzer")
-vim.lsp.enable("ruff")
-vim.lsp.enable("pylsp")
-vim.lsp.enable("nixd")
-vim.lsp.enable("zls")
-vim.lsp.enable("lua_ls")
+vim.lsp.enable({
+	"clangd",
+	"rust_analyzer",
+	"ruff",
+	"pylsp",
+	"nixd",
+	"zls",
+	"lua_ls",
+})
 
 vim.lsp.config("lua_ls", {
 	settings = {
@@ -185,7 +187,7 @@ vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank selection to system clipb
 vim.keymap.set("v", "<leader>d", '"+d', { desc = "Delete selection to system clipboard" })
 vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste to selection from system clipboard" })
 
--- IDE goodies
+-- LSP goodies
 vim.keymap.set("n", "gd", ts.lsp_definitions, { desc = "[G]oto [D]efinition" })
 
 -- ui options
