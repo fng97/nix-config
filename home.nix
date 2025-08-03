@@ -25,16 +25,20 @@ in {
     lazygit
     jrnl
     gh
-    television
+    newsboat
     htop
     git-crypt
     zig
     zls
   ];
 
-  home.file.".config/wezterm" = {
-    source = ./wezterm;
-    recursive = true;
+  home.file = {
+    ".config/wezterm" = {
+      source = ./wezterm;
+      recursive = true;
+    };
+
+    ".newsboat/urls".source = ./newsboat/urls;
   };
 
   programs.neovim = let
