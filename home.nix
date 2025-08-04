@@ -16,8 +16,6 @@ in {
   home.stateVersion = "24.05";
   home.username = "fng";
   home.sessionVariables.SHELL = "${pkgs.fish}/bin/fish";
-  programs.home-manager.enable = true;
-  programs.starship.enable = true;
   programs.fish.enable = true;
 
   home.packages = with pkgs; [
