@@ -157,7 +157,28 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixos-wsl": "nixos-wsl",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "website": "website"
+      }
+    },
+    "website": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1754058701,
+        "narHash": "sha256-fk+K3sVTchaeOAH337tExLdLLJnqSZDdOhCqfI1a4vk=",
+        "owner": "fng97",
+        "repo": "website",
+        "rev": "1218d5a602287decc19b3d015b4462788c5d6bd2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fng97",
+        "repo": "website",
+        "type": "github"
       }
     }
   },
