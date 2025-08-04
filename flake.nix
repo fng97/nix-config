@@ -5,6 +5,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     nixos-wsl.url = "github:nix-community/NixOS-WSL";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
     # discord bot: see host 'server' below
@@ -12,8 +13,8 @@
     adventus.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs =
-    { self, nixpkgs, home-manager, nix-darwin, nixos-wsl, adventus, ... }:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, nixos-wsl
+    , adventus, ... }:
     let
       secrets =
         builtins.fromJSON (builtins.readFile "${self}/secrets/secrets.json");
@@ -67,9 +68,27 @@
             nix.settings.experimental-features = "nix-command flakes";
             programs.fish.enable = true;
             system.configurationRevision = self.rev or self.dirtyRev or null;
+            system.primaryUser = "fng";
             users.users.fng.home = "/Users/fng";
             users.users.fng.shell = pkgs.fish;
+            homebrew = {
+              enable = true;
+              onActivation.cleanup = "uninstall";
+              onActivation.upgrade = true;
+              casks = [ "wezterm" "signal" "firefox" ];
+            };
+            security.pam.services.sudo_local.touchIdAuth = true;
           }
+
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = true;
+              user = "fng";
+            };
+          }
+
           home-manager.darwinModules.home-manager
           {
             home-manager.extraSpecialArgs = { inherit pkgs; };
