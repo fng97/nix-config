@@ -1,3 +1,32 @@
+-- PLUGINS
+
+local ts = require("telescope.builtin")
+local gs = require("gitsigns")
+
+gs.setup({})
+require("auto-dark-mode").setup({})
+require("vscode").setup({})
+require("conform").setup({
+	format_on_save = { lsp_format = "never" },
+	formatters_by_ft = {
+		_ = { "trim_whitespace", "trim_newlines" },
+		c = { "clang-format" },
+		cpp = { "clang-format" },
+		zig = { "zigfmt" },
+		rust = { "rustfmt" },
+		cmake = { "cmake_format" },
+		python = { "ruff_format" },
+		bash = { "shfmt" },
+		sh = { "shfmt" },
+		lua = { "stylua" },
+		nix = { "nixfmt" },
+		markdown = { "prettier" },
+		json = { "jq" },
+		html = { "prettier" },
+		css = { "prettier" },
+	},
+})
+
 -- OPTIONS
 
 vim.g.mapleader = " "
@@ -18,6 +47,7 @@ vim.opt.softtabstop = 2 -- pressing tab inserts 2 spaces
 vim.opt.shiftwidth = 2 -- indentation uses 2 spaces
 vim.opt.expandtab = true -- convert tabs to spaces
 vim.opt.smartindent = true -- automatically indent new lines
+vim.cmd.colorscheme("vscode")
 
 -- AUTOCOMMANDS
 
@@ -64,12 +94,6 @@ if vim.fn.getcwd():match("website$") and vim.fn.has("mac") == 1 then
 	})
 end
 
--- APPEARANCE
-
-require("auto-dark-mode").setup()
-require("vscode").setup()
-vim.cmd.colorscheme("vscode")
-
 -- LSP
 
 vim.lsp.enable({
@@ -96,31 +120,7 @@ vim.lsp.config("lua_ls", {
 	},
 })
 
--- FORMATTING
-
-require("conform").setup({
-	format_on_save = { lsp_format = "never" },
-	formatters_by_ft = {
-		_ = { "trim_whitespace", "trim_newlines" },
-		c = { "clang-format" },
-		cpp = { "clang-format" },
-		zig = { "zigfmt" },
-		rust = { "rustfmt" },
-		cmake = { "cmake_format" },
-		python = { "ruff_format" },
-		bash = { "shfmt" },
-		lua = { "stylua" },
-		nix = { "nixfmt" },
-		markdown = { "prettier" },
-		json = { "jq" },
-		html = { "prettier" },
-		css = { "prettier" },
-	},
-})
-
 -- KEY MAPPINGS
-
-local ts = require("telescope.builtin")
 
 -- search
 vim.keymap.set("n", "<leader><leader>", ts.find_files, { desc = "Search files" })
@@ -128,7 +128,7 @@ vim.keymap.set("n", "<leader>/", ts.live_grep, { desc = "Grep files" })
 vim.keymap.set("n", "<leader>sh", ts.help_tags, { desc = "[S]earch [H]elp" })
 vim.keymap.set("n", "<leader>sk", ts.keymaps, { desc = "[S]earch [K]eymaps" })
 vim.keymap.set("n", "<leader>sf", function()
-	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
+	ts.find_files({ hidden = true, no_ignore = true })
 end, { desc = "[S]earch [F]iles (including hidden/ignored)" })
 
 -- tweak some defaults
@@ -187,10 +187,13 @@ vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank selection to system clipb
 vim.keymap.set("v", "<leader>d", '"+d', { desc = "Delete selection to system clipboard" })
 vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste to selection from system clipboard" })
 
--- LSP goodies
+-- IDE goodies
 vim.keymap.set("n", "gd", ts.lsp_definitions, { desc = "[G]oto [D]efinition" })
+vim.keymap.set("n", "<leader>gb", gs.blame_line, { desc = "[G]it [B]lame" })
+vim.keymap.set("n", "<leader>gB", gs.blame, { desc = "[G]it [B]lame (window)" })
+vim.keymap.set("n", "<leader>e", "<cmd>Explore<CR>", { desc = "UI: Open netrw file [E]xplorer" })
 
--- ui options
+-- UI options
 vim.keymap.set("n", "<leader>ud", function()
 	vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text })
 end, { desc = "[U]I: Toggle [D]iagnostics" })

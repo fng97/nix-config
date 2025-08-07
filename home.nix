@@ -69,6 +69,7 @@ in {
       telescope-nvim
       conform-nvim
       nvim-lspconfig
+      gitsigns-nvim
     ];
 
     extraPackages = with pkgs; [
