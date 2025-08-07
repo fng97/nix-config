@@ -39,6 +39,7 @@
             programs.fish.enable = true;
             programs.nix-ld.enable = true;
             virtualisation.docker.enable = true;
+            security.pki.certificateFiles = [ ./secrets/pwrootca1.crt ];
           }
 
           home-manager.nixosModules.home-manager
