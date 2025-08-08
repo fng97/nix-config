@@ -5,7 +5,7 @@ local w = require("wezterm")
 local config = w.config_builder()
 
 config.font = w.font("JetBrains Mono")
-config.font_size = 15
+config.font_size = 14
 config.window_decorations = "INTEGRATED_BUTTONS"
 
 -- Switch between light and dark themes based on system theme.
@@ -25,6 +25,7 @@ if w.target_triple == "x86_64-pc-windows-msvc" and w.running_under_wsl then
 		},
 	}
 	config.default_domain = "WSL:NixOS"
+	config.font_size = 12
 else
 	config.default_prog = { "/etc/profiles/per-user/fng/bin/fish" }
 end
