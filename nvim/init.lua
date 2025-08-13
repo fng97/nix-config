@@ -1,11 +1,13 @@
 -- PLUGINS
 
-local ts = require("telescope.builtin")
-local gs = require("gitsigns")
-
-gs.setup({})
+require("telescope").setup({})
+require("gitsigns").setup({})
 require("auto-dark-mode").setup({})
 require("vscode").setup({})
+require("lualine").setup({
+	options = { globalstatus = true },
+	sections = { lualine_x = { "searchcount" } },
+})
 require("conform").setup({
 	format_on_save = { lsp_format = "never" },
 	formatters_by_ft = {
@@ -27,14 +29,16 @@ require("conform").setup({
 	},
 })
 
+require("telescope").load_extension("file_browser")
+require("telescope").load_extension("fzf")
+
 -- OPTIONS
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.laststatus = 0 -- hide status line
-vim.opt.scrolloff = 10 -- pad lines around cursor
+vim.opt.scrolloff = 5 -- pad lines around cursor
 vim.opt.undofile = true -- persist undo history
 vim.opt.cmdheight = 0 -- hide command line unless active
 vim.opt.confirm = true -- don't fail silently
@@ -122,6 +126,8 @@ vim.lsp.config("lua_ls", {
 
 -- KEY MAPPINGS
 
+local ts = require("telescope.builtin")
+
 -- search
 vim.keymap.set("n", "<leader><leader>", ts.find_files, { desc = "Search files" })
 vim.keymap.set("n", "<leader>/", ts.live_grep, { desc = "Grep files" })
@@ -189,9 +195,11 @@ vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste to selection from system
 
 -- IDE goodies
 vim.keymap.set("n", "gd", ts.lsp_definitions, { desc = "[G]oto [D]efinition" })
-vim.keymap.set("n", "<leader>gb", gs.blame_line, { desc = "[G]it [B]lame" })
-vim.keymap.set("n", "<leader>gB", gs.blame, { desc = "[G]it [B]lame (window)" })
-vim.keymap.set("n", "<leader>e", "<cmd>Explore<CR>", { desc = "UI: Open netrw file [E]xplorer" })
+vim.keymap.set("n", "<leader>gb", require("gitsigns").blame_line, { desc = "[G]it [B]lame" })
+vim.keymap.set("n", "<leader>gB", require("gitsigns").blame, { desc = "[G]it [B]lame (window)" })
+vim.keymap.set("n", "<leader>e", function()
+	require("telescope").extensions.file_browser.file_browser()
+end, { desc = "UI: Toggle file [E]xplorer tree" })
 
 -- UI options
 vim.keymap.set("n", "<leader>ud", function()

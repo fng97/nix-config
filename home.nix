@@ -67,9 +67,12 @@ in {
       vscode-theme
       nvim-treesitter.withAllGrammars
       telescope-nvim
+      telescope-fzf-native-nvim
+      telescope-file-browser-nvim
       conform-nvim
       nvim-lspconfig
       gitsigns-nvim
+      lualine-nvim
     ];
 
     extraPackages = with pkgs; [
