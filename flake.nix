@@ -6,9 +6,8 @@
     nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
-    nixos-wsl.url = "github:nix-community/NixOS-WSL";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/release-25.05";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
-    # discord bot: see host 'server' below
     adventus.url = "github:fng97/adventus";
     adventus.inputs.nixpkgs.follows = "nixpkgs";
   };
