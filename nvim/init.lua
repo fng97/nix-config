@@ -198,7 +198,7 @@ vim.keymap.set("n", "gd", ts.lsp_definitions, { desc = "[G]oto [D]efinition" })
 vim.keymap.set("n", "<leader>gb", require("gitsigns").blame_line, { desc = "[G]it [B]lame" })
 vim.keymap.set("n", "<leader>gB", require("gitsigns").blame, { desc = "[G]it [B]lame (window)" })
 vim.keymap.set("n", "<leader>e", function()
-	require("telescope").extensions.file_browser.file_browser()
+	require("telescope").extensions.file_browser.file_browser({ path = vim.fn.expand("%:p:h") })
 end, { desc = "UI: Toggle file [E]xplorer tree" })
 
 -- UI options
