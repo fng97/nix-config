@@ -1,6 +1,9 @@
 const std = @import("std");
 
 pub fn build(b: *std.Build) !void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+
     const host = b.graph.host.result;
     const pandoc_exe = dependency: {
         // We return null here if the dependency hasn't been fetched. The build system will attempt
@@ -23,7 +26,8 @@ pub fn build(b: *std.Build) !void {
     const blog_list_builder = b.addExecutable(.{
         .name = "blog_list_builder",
         .root_source_file = b.path("blog_list_builder.zig"),
-        .target = b.graph.host,
+        .target = target,
+        .optimize = optimize,
     });
     const build_blog_list_step = b.addRunArtifact(blog_list_builder);
     const updated_index = build_blog_list_step.addPrefixedOutputFileArg("--output=", "index.html");
