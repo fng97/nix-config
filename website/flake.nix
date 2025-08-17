@@ -1,46 +1,69 @@
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  inputs.zig2nix.url = "github:Cloudef/zig2nix";
+  inputs.zig2nix.inputs.nixpkgs.follows = "nixpkgs";
 
-  outputs = { self, nixpkgs, ... }:
+  outputs = { self, nixpkgs, zig2nix, ... }:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-      pkgsFor = nixpkgs.legacyPackages;
-
-      makePackage = system:
-        let pkgs = pkgsFor.${system};
-        in pkgs.stdenv.mkDerivation {
-          name = "website";
-          src = pkgs.lib.cleanSource ./.;
-          nativeBuildInputs = [ pkgs.zig pkgs.git ];
-          buildPhase = ''
-            mkdir -p .cache
-            zig build --global-cache-dir .cache --prefix $out
-          '';
-          installPhase = "true"; # nothing to do, already installed to prefix
-        };
+      mkForSystem = system: {
+        pkgs = import nixpkgs { inherit system; };
+        env = zig2nix.outputs.zig-env.${system} { };
+      };
+      forAllSystems = f:
+        nixpkgs.lib.genAttrs supportedSystems (system: f (mkForSystem system));
     in {
-      packages = forAllSystems (system: { default = makePackage system; });
+      packages =
+        forAllSystems ({ env, ... }: { default = env.package { src = ./.; }; });
 
-      devShells = forAllSystems (system:
-        let pkgs = pkgsFor.${system};
-        in { default = pkgs.mkShell { buildInputs = [ pkgs.zig ]; }; });
+      devShells = forAllSystems ({ env, ... }: { default = env.mkShell { }; });
 
-      nixosModule = { pkgs, config, lib, ... }: {
-        options.services.website.enable = lib.mkEnableOption "Enable website";
+      nixosModules.default = { pkgs, config, lib, ... }:
+        let cfg = config.services.website;
+        in {
+          options.services.website = {
+            enable = lib.mkEnableOption "Enable website";
 
-        config = lib.mkIf config.services.website.enable {
-          services.caddy = {
-            enable = true;
-            virtualHosts."francisco.wiki".extraConfig = ''
-              root * ${self.packages.${pkgs.stdenv.hostPlatform.system}.default}
-              encode
-              file_server
-            '';
+            domain = lib.mkOption {
+              type = lib.types.str;
+              default = "http://localhost"; # for testing
+              description = "The domain name Caddy should serve.";
+            };
+
           };
 
-          networking.firewall.allowedTCPPorts = [ 80 443 ];
+          config = lib.mkIf cfg.enable {
+            services.caddy = {
+              enable = true;
+              virtualHosts.${cfg.domain}.extraConfig = ''
+                root * ${
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.default
+                }
+                encode
+                file_server
+              '';
+            };
+
+            networking.firewall.allowedTCPPorts = [ 80 443 ];
+          };
         };
-      };
+
+      checks = forAllSystems ({ pkgs, ... }: {
+        website-test = pkgs.nixosTest {
+          name = "website-test";
+
+          nodes.machine = { ... }: {
+            imports = [ self.nixosModules.default ];
+            services.website.enable = true;
+          };
+
+          testScript = ''
+            machine.start()
+            machine.wait_for_unit("caddy.service")
+            # machine.wait_for_open_port(80)
+            machine.succeed("curl -sSf http://localhost | grep -q 'Francisco Nevitt Gonçalves'")
+          '';
+        };
+      });
     };
 }
