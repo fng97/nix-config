@@ -2,3 +2,7 @@ result
 
 .DS_Store
 vmhost.qcow2
+.zig-cache
+zig-out
+.direnv
+result
