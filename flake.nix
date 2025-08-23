@@ -10,14 +10,78 @@
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
     adventus.url = "github:fng97/adventus";
     adventus.inputs.nixpkgs.follows = "nixpkgs";
+    zig2nix.url = "github:Cloudef/zig2nix";
+    zig2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, nixos-wsl
-    , adventus, ... }:
+    , adventus, zig2nix, ... }:
     let
       secrets =
         builtins.fromJSON (builtins.readFile "${self}/secrets/secrets.json");
+      supportedSystems = [ "x86_64-linux" "aarch64-darwin" ];
+      mkForSystem = system: {
+        pkgs = import nixpkgs { inherit system; };
+        env = zig2nix.outputs.zig-env.${system} {
+          zig = zig2nix.outputs.packages.${system}."zig-0_14_1";
+        };
+      };
+      forAllSystems = f:
+        nixpkgs.lib.genAttrs supportedSystems (system: f (mkForSystem system));
     in {
+      packages = forAllSystems
+        ({ env, ... }: { website = env.package { src = ./website; }; });
+
+      devShells = forAllSystems ({ env, ... }: { default = env.mkShell { }; });
+
+      nixosModules.website = { pkgs, config, lib, ... }:
+        let cfg = config.services.website;
+        in {
+          options.services.website = {
+            enable = lib.mkEnableOption "Enable website";
+
+            domain = lib.mkOption {
+              type = lib.types.str;
+              default = "http://localhost"; # for testing
+              description = "The domain name Caddy should serve.";
+            };
+
+          };
+
+          config = lib.mkIf cfg.enable {
+            services.caddy = {
+              enable = true;
+              virtualHosts.${cfg.domain}.extraConfig = ''
+                root * ${
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.website
+                }
+                encode
+                file_server
+              '';
+            };
+
+            networking.firewall.allowedTCPPorts = [ 80 443 ];
+          };
+        };
+
+      checks = forAllSystems ({ pkgs, ... }: {
+        website-test = pkgs.nixosTest {
+          name = "website-test";
+
+          nodes.machine = { ... }: {
+            imports = [ self.nixosModules.website ];
+            services.website.enable = true;
+          };
+
+          testScript = ''
+            machine.start()
+            machine.wait_for_unit("caddy.service")
+            # machine.wait_for_open_port(80)
+            machine.succeed("curl -sSf http://localhost | grep -q 'Francisco Nevitt Gonçalves'")
+          '';
+        };
+      });
+
       nixosConfigurations.wsl = let
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.${system};
@@ -105,13 +169,23 @@
       nixosConfigurations.server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit secrets adventus; };
-        modules = [ ./hosts/server/configuration.nix ];
+        modules = [
+          ./hosts/server/configuration.nix
+          self.nixosModules.website
+          {
+            services.website = {
+              enable = true;
+              domain = "francisco.wiki";
+            };
+          }
+        ];
       };
 
       nixosConfigurations.testvm = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           adventus.nixosModule
+          self.nixosModules.website
           ({ pkgs, ... }: {
             fileSystems."/".label = "vmdisk"; # root filesystem label for QEMU
             networking.hostName = "vmhost";
@@ -127,9 +201,13 @@
             security.sudo.enable = true;
             security.sudo.wheelNeedsPassword = false;
 
-            services.adventus = {
-              enable = true;
-              discordToken = secrets.adventus.discordToken;
+            services = {
+              website.enable = true;
+
+              adventus = {
+                enable = true;
+                discordToken = secrets.adventus.discordToken;
+              };
             };
           })
         ];
