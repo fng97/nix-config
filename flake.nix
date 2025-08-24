@@ -92,8 +92,6 @@
           {
             system.stateVersion = "24.05";
             nix.settings.experimental-features = [ "flakes nix-command" ];
-            environment.systemPackages = [ pkgs.tailscale ];
-            services.tailscale.enable = true;
             wsl.enable = true;
             wsl.defaultUser = "fng";
             wsl.startMenuLaunchers = true;
@@ -127,9 +125,20 @@
         modules = [
           {
             system.stateVersion = 5;
-            environment.systemPackages = with pkgs; [ tailscale wezterm ];
+            environment.systemPackages = with pkgs; [ tailscale ];
             services.tailscale.enable = true;
             nix.settings.experimental-features = "nix-command flakes";
+            nix.linux-builder = {
+              enable = true;
+              ephemeral = true;
+              maxJobs = 4;
+              config = {
+                virtualisation = {
+                  darwin-builder.memorySize = 8 * 1024;
+                  cores = 6;
+                };
+              };
+            };
             programs.fish.enable = true;
             system.configurationRevision = self.rev or self.dirtyRev or null;
             system.primaryUser = "fng";
