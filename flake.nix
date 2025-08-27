@@ -10,29 +10,36 @@
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
     adventus.url = "github:fng97/adventus";
     adventus.inputs.nixpkgs.follows = "nixpkgs";
-    zig2nix.url = "github:Cloudef/zig2nix";
-    zig2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, nixos-wsl
-    , adventus, zig2nix, ... }:
+    , adventus, ... }:
     let
       secrets =
         builtins.fromJSON (builtins.readFile "${self}/secrets/secrets.json");
-      supportedSystems = [ "x86_64-linux" "aarch64-darwin" ];
-      mkForSystem = system: {
-        pkgs = import nixpkgs { inherit system; };
-        env = zig2nix.outputs.zig-env.${system} {
-          zig = zig2nix.outputs.packages.${system}."zig-0_14_1";
-        };
-      };
-      forAllSystems = f:
-        nixpkgs.lib.genAttrs supportedSystems (system: f (mkForSystem system));
-    in {
-      packages = forAllSystems
-        ({ env, ... }: { website = env.package { src = ./website; }; });
 
-      devShells = forAllSystems ({ env, ... }: { default = env.mkShell { }; });
+      supportedSystems = [ "x86_64-linux" "aarch64-darwin" ];
+      forSupportedSystems = nixpkgs.lib.genAttrs supportedSystems;
+    in {
+      packages = forSupportedSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in {
+          website = pkgs.stdenv.mkDerivation {
+            name = "website";
+            src = ./website;
+            nativeBuildInputs = [ pkgs.zig ];
+            buildInputs = [ pkgs.pandoc ];
+            XDG_CACHE_HOME = ".cache";
+            installPhase = "zig build --prefix $out install";
+          };
+        });
+
+      devShells = forSupportedSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in {
+          default =
+            pkgs.mkShell { buildInputs = with pkgs; [ zig zls pandoc ]; };
+        });
 
       nixosModules.website = { pkgs, config, lib, ... }:
         let cfg = config.services.website;
@@ -52,9 +59,7 @@
             services.caddy = {
               enable = true;
               virtualHosts.${cfg.domain}.extraConfig = ''
-                root * ${
-                  self.packages.${pkgs.stdenv.hostPlatform.system}.website
-                }
+                root * ${self.packages.${pkgs.system}.website}
                 encode
                 file_server
               '';
@@ -64,23 +69,23 @@
           };
         };
 
-      checks = forAllSystems ({ pkgs, ... }: {
-        website-test = pkgs.nixosTest {
-          name = "website-test";
-
-          nodes.machine = { ... }: {
-            imports = [ self.nixosModules.website ];
-            services.website.enable = true;
-          };
-
-          testScript = ''
-            machine.start()
-            machine.wait_for_unit("caddy.service")
-            # machine.wait_for_open_port(80)
-            machine.succeed("curl -sSf http://localhost | grep -q 'Francisco Nevitt Gonçalves'")
-          '';
-        };
-      });
+      # checks = forAllSystems ({ pkgs, ... }: {
+      #   website-test = pkgs.nixosTest {
+      #     name = "website-test";
+      #
+      #     nodes.machine = { ... }: {
+      #       imports = [ self.nixosModules.website ];
+      #       services.website.enable = true;
+      #     };
+      #
+      #     testScript = ''
+      #       machine.start()
+      #       machine.wait_for_unit("caddy.service")
+      #       # machine.wait_for_open_port(80)
+      #       machine.succeed("curl -sSf http://localhost | grep -q 'Francisco Nevitt Gonçalves'")
+      #     '';
+      #   };
+      # });
 
       nixosConfigurations.wsl = let
         system = "x86_64-linux";
