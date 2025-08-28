@@ -63,9 +63,6 @@
         in {
           home.stateVersion = "24.05";
           home.username = "fng";
-          home.sessionVariables = { SHELL = "${pkgs.fish}/bin/fish"; };
-
-          programs.fish.enable = true;
 
           home.packages = with pkgs; [
             tlrc
@@ -163,8 +160,6 @@
       commonNixosModule = { pkgs, ... }: {
         nix.settings.experimental-features = "nix-command flakes";
         programs.fish.enable = true;
-        users.defaultUserShell = pkgs.fish;
-        users.users.fng.shell = pkgs.fish;
         home-manager.extraSpecialArgs = { inherit pkgs; };
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
