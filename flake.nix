@@ -78,10 +78,10 @@
 
           home.file = {
             ".config/wezterm" = {
-              source = ./wezterm;
+              source = ./dotfiles/wezterm;
               recursive = true;
             };
-            ".newsboat/urls".source = ./newsboat/urls;
+            ".newsboat/urls".source = ./dotfiles/newsboat/urls;
           };
 
           # TODO: Move nvim out into package/app.
@@ -139,7 +139,7 @@
               lua-language-server
             ];
 
-            extraLuaConfig = pkgs.lib.fileContents ./nvim/init.lua;
+            extraLuaConfig = pkgs.lib.fileContents ./dotfiles/nvim/init.lua;
           };
 
           programs.direnv = {
