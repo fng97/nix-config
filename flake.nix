@@ -161,8 +161,10 @@
         nix.settings.experimental-features = "nix-command flakes";
         programs.fish.enable = true;
         programs.fish.interactiveShellInit = "set fish_greeting";
-        programs.bash.shellInit =
+        programs.bash.interactiveShellInit =
           builtins.readFile ./dotfiles/bashrc_launch_fish.sh;
+        programs.zsh.interactiveShellInit =
+          builtins.readFile ./dotfiles/zsh_launch_fish.sh;
         home-manager.extraSpecialArgs = { inherit pkgs; };
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
