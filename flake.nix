@@ -233,11 +233,9 @@
             virtualisation.docker.enable = true;
             programs.nix-ld.enable = true;
             security.pki.certificateFiles = [ ./secrets/pwrootca1.crt ];
-            home-manager.users.fng = {
-              imports = [ commonHomeManagerModule ];
-              home.sessionVariables.BROWSER = "wslview";
-              home.packages = with pkgs; [ wslu wget ];
-            };
+            environment.systemPackages = with pkgs; [ wslu wget ];
+            environment.variables.BROWSER = "wslview";
+            home-manager.users.fng = { imports = [ commonHomeManagerModule ]; };
           }
         ];
       };
@@ -279,13 +277,11 @@
               casks = [ "wezterm" "signal" "firefox" ];
             };
             environment.systemPackages = with pkgs; [ tailscale ];
+            environment.variables.BROWSER = "open";
             services.tailscale.enable = true;
             security.pam.services.sudo_local.touchIdAuth = true;
             users.users.fng.home = "/Users/fng";
-            home-manager.users.fng = {
-              imports = [ commonHomeManagerModule ];
-              home.sessionVariables.BROWSER = "open";
-            };
+            home-manager.users.fng = { imports = [ commonHomeManagerModule ]; };
           }
         ];
       };
