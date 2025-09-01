@@ -165,6 +165,8 @@
           builtins.readFile ./dotfiles/bashrc_launch_fish.sh;
         programs.zsh.interactiveShellInit =
           builtins.readFile ./dotfiles/zsh_launch_fish.sh;
+        environment.variables.EDITOR = "nvim";
+        environment.variables.VISUAL = "nvim";
         home-manager.extraSpecialArgs = { inherit pkgs; };
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
