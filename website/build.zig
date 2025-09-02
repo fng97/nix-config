@@ -60,6 +60,7 @@ pub fn build(b: *std.Build) !void {
             "--from=markdown",
             "--to=html5",
             "--fail-if-warnings=true",
+            "--shift-heading-level-by=1", // # -> ##
         });
         pandoc_step.addPrefixedFileArg("--template=", b.path("template.html"));
         pandoc_step.addPrefixedFileArg("--css=", b.path("styles.css"));
