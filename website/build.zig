@@ -107,4 +107,9 @@ pub fn build(b: *std.Build) !void {
     if (host.os.tag != .macos) open_cmd.step.dependOn(&b.addFail("'open' is macOS-only").step);
     open_cmd.step.dependOn(b.getInstallStep());
     reload_step.dependOn(&open_cmd.step);
+
+    // Add step for ZLS build-on-save.
+    const module_check = b.addExecutable(.{ .name = "module_check", .root_module = module });
+    const check = b.step("check", "ZLS compilation checks");
+    check.dependOn(&module_check.step);
 }
