@@ -19,11 +19,13 @@ const Post = struct {
 };
 
 pub fn main() !void {
-    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    var debug_allocator: std.heap.DebugAllocator(.{}) = .init;
+    var arena = std.heap.ArenaAllocator.init(debug_allocator.allocator());
     defer arena.deinit();
     const allocator = arena.allocator();
 
     var args = try std.process.argsWithAllocator(allocator);
+    defer args.deinit();
 
     var index_in_path: ?[]const u8 = null;
     var index_out_path: ?[]const u8 = null;

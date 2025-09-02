@@ -181,18 +181,23 @@
           website = pkgs.stdenv.mkDerivation {
             name = "website";
             src = ./website;
-            nativeBuildInputs = [ pkgs.zig ];
-            buildInputs = [ pkgs.pandoc ];
-            XDG_CACHE_HOME = ".cache";
-            installPhase = "zig build --prefix $out install";
+            ZIG_GLOBAL_CACHE_DIR = ".cache";
+            nativeBuildInputs = with pkgs; [ zig pandoc ];
+            buildPhase = "zig build install --prefix $out";
+            dontInstall = true; # installed during build phase
+            doCheck = true;
+            nativeCheckInputs = with pkgs; [ validator-nu ];
+            checkPhase = "zig build test";
           };
         });
 
       devShells = forSupportedSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
         in {
-          default =
-            pkgs.mkShell { buildInputs = with pkgs; [ zig zls pandoc ]; };
+          default = pkgs.mkShell {
+            packages = with pkgs; [ zls ];
+            inputsFrom = [ self.packages.${pkgs.system}.website ];
+          };
         });
 
       # TODO: Re-enable this check and write one that tests both the Discord bot and the website.
