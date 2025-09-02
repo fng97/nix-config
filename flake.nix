@@ -259,17 +259,6 @@
             system.stateVersion = 5;
             system.configurationRevision = self.rev or self.dirtyRev or null;
             system.primaryUser = "fng";
-            nix.linux-builder = {
-              enable = true;
-              ephemeral = true;
-              maxJobs = 4;
-              config = {
-                virtualisation = {
-                  darwin-builder.memorySize = 8 * 1024;
-                  cores = 6;
-                };
-              };
-            };
             nix-homebrew = {
               enable = true;
               enableRosetta = true;
