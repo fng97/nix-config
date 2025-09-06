@@ -84,6 +84,8 @@
             ".newsboat/urls".source = ./dotfiles/newsboat/urls;
           };
 
+          programs.fish.enable = true;
+
           # TODO: Move nvim out into package/app.
           programs.neovim = let
             auto-dark-mode = pkgs.vimUtils.buildVimPlugin {
