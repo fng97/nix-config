@@ -42,7 +42,6 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.wrap = false
 vim.opt.scrolloff = 3 -- pad lines around cursor
 vim.opt.undofile = true -- persist undo history
 vim.opt.cmdheight = 0 -- hide command line unless active
@@ -55,6 +54,7 @@ vim.opt.softtabstop = 2 -- pressing tab inserts 2 spaces
 vim.opt.shiftwidth = 2 -- indentation uses 2 spaces
 vim.opt.expandtab = true -- convert tabs to spaces
 vim.opt.smartindent = true -- automatically indent new lines
+vim.opt.breakindent = true -- start with tab in case of line wrap
 vim.opt.splitright = true -- by default open splits to the right
 vim.cmd.colorscheme("vscode")
 
