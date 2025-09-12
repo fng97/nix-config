@@ -143,6 +143,16 @@ end, { desc = "[S]earch [F]iles (including hidden/ignored)" })
 -- tweak some defaults
 vim.keymap.set("v", "<", "<gv", { desc = "Indent Left" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent Right" })
+vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", {
+	desc = "Go down a line (works on wrapped lines)",
+	expr = true,
+	silent = true,
+})
+vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", {
+	desc = "Go up a line (works on wrapped lines)",
+	expr = true,
+	silent = true,
+})
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Page up and center" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Page down and center" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
