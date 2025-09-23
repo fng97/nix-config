@@ -10,10 +10,14 @@
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
     adventus.url = "github:fng97/adventus";
     adventus.inputs.nixpkgs.follows = "nixpkgs";
+    zig-overlay.url = "github:mitchellh/zig-overlay";
+    zig-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    zls-overlay.url = "github:zigtools/zls?ref=0.15.0";
+    zls-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, nix-homebrew, nixos-wsl
-    , adventus, ... }:
+    , adventus, zig-overlay, zls-overlay, ... }:
     let
       secrets =
         builtins.fromJSON (builtins.readFile "${self}/secrets/secrets.json");
@@ -175,10 +179,21 @@
       };
 
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" ];
+      mkPkgs = system:
+        import nixpkgs {
+          inherit system;
+          overlays = [
+            zig-overlay.overlays.default
+            (final: prev: {
+              zig = final.zigpkgs."0.15.1";
+              zls = zls-overlay.packages.${system}.default;
+            })
+          ];
+        };
       forSupportedSystems = nixpkgs.lib.genAttrs supportedSystems;
     in {
       packages = forSupportedSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
+        let pkgs = mkPkgs system;
         in {
           website = pkgs.stdenv.mkDerivation {
             name = "website";
@@ -194,7 +209,7 @@
         });
 
       devShells = forSupportedSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
+        let pkgs = mkPkgs system;
         in {
           default = pkgs.mkShell {
             packages = with pkgs; [ zls ];
@@ -202,28 +217,9 @@
           };
         });
 
-      # TODO: Re-enable this check and write one that tests both the Discord bot and the website.
-      # checks = forAllSystems ({ pkgs, ... }: {
-      #   website-test = pkgs.nixosTest {
-      #     name = "website-test";
-      #
-      #     nodes.machine = { ... }: {
-      #       imports = [ websiteNixosModule ];
-      #       services.website.enable = true;
-      #     };
-      #
-      #     testScript = ''
-      #       machine.start()
-      #       machine.wait_for_unit("caddy.service")
-      #       # machine.wait_for_open_port(80)
-      #       machine.succeed("curl -sSf http://localhost | grep -q 'Francisco Nevitt Gonçalves'")
-      #     '';
-      #   };
-      # });
-
       nixosConfigurations.wsl = let
         system = "x86_64-linux";
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = mkPkgs system;
       in nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
@@ -249,7 +245,7 @@
 
       darwinConfigurations.macbook = let
         system = "aarch64-darwin";
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = mkPkgs system;
       in nix-darwin.lib.darwinSystem {
         inherit system;
         modules = [
@@ -270,7 +266,7 @@
               enable = true;
               onActivation.cleanup = "uninstall";
               onActivation.upgrade = true;
-              casks = [ "wezterm" "signal" "firefox" ];
+              casks = [ "wezterm" "signal" "firefox" "whatsapp" ];
             };
             environment.systemPackages = with pkgs; [ tailscale ];
             environment.variables.BROWSER = "open";
