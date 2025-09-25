@@ -1,7 +1,7 @@
 const std = @import("std");
 const html_dir = @import("config").html_dir;
 
-test "validate HTML" {
+test "validate_html" {
     var debug_allocator: std.heap.DebugAllocator(.{}) = .init;
     const allocator = debug_allocator.allocator();
 
@@ -19,7 +19,7 @@ test "validate HTML" {
     try std.testing.expectEqual(std.process.Child.Term{ .Exited = 0 }, try child.spawnAndWait());
 }
 
-test "validate CSS" {
+test "validate_css" {
     var debug_allocator: std.heap.DebugAllocator(.{}) = .init;
     const allocator = debug_allocator.allocator();
 
@@ -35,7 +35,7 @@ test "validate CSS" {
     try std.testing.expectEqual(std.process.Child.Term{ .Exited = 0 }, try child.spawnAndWait());
 }
 
-test "check links" {
+test "check_links" {
     var debug_allocator: std.heap.DebugAllocator(.{}) = .init;
     var arena = std.heap.ArenaAllocator.init(debug_allocator.allocator());
     defer arena.deinit();
