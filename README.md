@@ -1,78 +1,50 @@
 # Nix Config
 
+Hello there! You've stumbled upon my [Nix](https://nixos.org) monorepo. I use it to manage all of my
+tools and systems. It includes things like my [dotfiles](./dotfiles), NixOS system configurations,
+and my [website](https://francisco.wiki) (see `.#website` and `.#server`). If you're curious about
+anything here, feel free to reach out.
+
 ## `macbook`
 
 1. Install Nix with the
    [Determinate Installer](https://github.com/DeterminateSystems/nix-installer).
-   - When prompted, make sure to use vanilla upstream Nix instead of Determinate Nix.
-2. Run `nix run nix-darwin/master#darwin-rebuild -- switch --flake github:fng97/nix-config#macbook`.
-3. To update with local changes to the flake run `nix-darwin switch --flake .#macbook`.
+   - When prompted, **make sure to use vanilla upstream Nix instead of Determinate Nix**.
+2. Install (and update) [nix-darwin](https://github.com/nix-darwin/nix-darwin) with
+   `sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake .#macbook`.
 
 ## Windows
 
-1. Update everything with `winget upgrade --all` and make sure `win32yank.exe`, WezTerm, and
-   PowerToys are installed.
-2. PowerToys: enable Keyboard Manager (swap CAPS for CTRL), FancyZones, and disable the rest.
+1. Update everything with `winget upgrade --all` and make sure
+   [`win32yank.exe`](https://github.com/equalsraf/win32yank), [WezTerm](https://wezterm.org), and
+   [PowerToys](https://github.com/microsoft/PowerToys) are installed.
+2. PowerToys: enable Keyboard Manager (swap CAPS for CTRL), enable FancyZones, and disable the rest.
 
 ## `wsl`
 
 1. Install [NixOS-WSL](https://github.com/nix-community/NixOS-WSL).
-2. Clone this repo to `/tmp` and unlock `git-crypt`.
-
-   ```bash
-   nix-shell -p git git-crypt
-   ```
-
-   ```bash
-   git clone https://github.com/fng97/nix-config.git /tmp/nix-config && cd /tmp/nix-config
-   ```
-
-3. Switch to flake:
-
-   ```bash
-   sudo nixos-rebuild switch --flake .#wsl
-   ```
-
-4. Copy repo `~/src` for future use.
-5. Copy `wezterm` folder to `~/.config/wezterm` (_Windows_ home directory).
+2. Switch to flake: `sudo nixos-rebuild switch --flake .#wsl`
+3. Copy `wezterm` folder to `~/.config/wezterm` (`~` here is the _Windows_ home directory).
 
 ## `server`
 
 Setting up a new server:
 
 1. Provision the server and install NixOS (e.g. with
-   [NixOS-Infect](https://github.com/elitak/nixos-infect)).
-
-   NOTE: A `configuration.nix` and `hardware-configuration.nix` will be generated for us based on
-   the server. NixOS-Infect will additionally generate a `networking.nix` for us.
-
-2. Retrieve the generated configuration: `scp -r root@<ip>:/etc/nixos hosts/server`.
-3. Replace the secrets with ones stored in `secrets/secrets.json` (`git-crypt`) and adjust the
-   imports to include the tailscale module:
-
-   ```nix
-   imports = [
-     ./hardware-configuration.nix
-     ./tailscale.nix
-     (import ./networking.nix { inherit secrets; })
-   ];
-   ```
-
+   [NixOS-Infect](https://github.com/elitak/nixos-infect)). A `configuration.nix`, `networking.nix`,
+   and `hardware-configuration.nix` will be generated for us.
+2. Retrieve the generated configuration: `scp -r root@<ip>:/etc/nixos hosts/server` and update
+   `.#server` to use it.
+3. Update the secrets in `secrets/secrets.json` ([`git-crypt`](https://github.com/AGWA/git-crypt)).
 4. Deploy the configuration:
 
    ```bash
-   nix run nixpkgs#nixos-rebuild -- switch --fast --flake .#server \
-       --target-host root@<ip> \
-       --build-host root@<ip>
+   nix run nixpkgs#nixos-rebuild -- switch \
+           --fast --flake .#server \
+           --use-remote-sudo \
+           --target-host root@server \
+           --build-host root@server
    ```
 
-5. Over SSH, authenticate tailscale: `tailscale up --ssh`.
+5. Over SSH, authenticate [tailscale](https://tailscale.com): `tailscale up --ssh`.
 6. In the tailscale dashboard, make sure the new machine's token will not expire.
-
-To deploy further changes to the configuration:
-
-```bash
-nix run nixpkgs#nixos-rebuild -- switch --fast --flake .#server \
-    --target-host root@server \
-    --build-host root@server
-```
