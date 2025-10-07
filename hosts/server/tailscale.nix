@@ -1,6 +1,7 @@
 { pkgs, config, ... }: {
   environment.systemPackages = [ pkgs.tailscale ];
   services.tailscale.enable = true;
+  services.tailscale.useRoutingFeatures = "server";
   networking = {
     firewall = {
       enable = true;
