@@ -78,6 +78,7 @@
             git-crypt
             zig
             zls
+            python314
           ];
 
           home.file = {
