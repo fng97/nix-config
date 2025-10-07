@@ -205,7 +205,6 @@
             nativeBuildInputs = with pkgs; [ zig pandoc ];
             buildPhase = "zig build install --prefix $out";
             dontInstall = true; # installed during build phase
-            doCheck = true;
             nativeCheckInputs = with pkgs; [ validator-nu ];
             checkPhase = "zig build test";
           };
