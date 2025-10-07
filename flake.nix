@@ -90,6 +90,7 @@
           };
 
           programs.fish.enable = true;
+          programs.vscode.enable = true;
 
           # TODO: Move nvim out into package/app.
           programs.neovim = let
@@ -166,6 +167,7 @@
 
       commonNixosModule = { pkgs, ... }: {
         nix.settings.experimental-features = "nix-command flakes";
+        nixpkgs.config.allowUnfree = true;
         programs.fish.enable = true;
         programs.fish.interactiveShellInit = "set fish_greeting";
         programs.bash.interactiveShellInit =
