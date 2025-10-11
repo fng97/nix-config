@@ -202,10 +202,11 @@
             name = "website";
             src = ./website;
             ZIG_GLOBAL_CACHE_DIR = ".cache";
-            nativeBuildInputs = with pkgs; [ zig pandoc ];
+            # Put validator-nu here so it's propagated to shell below. Wouldn't have to do this if
+            # doCheck was set but it always fails on the server.
+            nativeBuildInputs = with pkgs; [ zig pandoc validator-nu ];
             buildPhase = "zig build install --prefix $out";
             dontInstall = true; # installed during build phase
-            nativeCheckInputs = with pkgs; [ validator-nu ];
             checkPhase = "zig build test";
           };
         });

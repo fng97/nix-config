@@ -3,7 +3,7 @@ const std = @import("std");
 pub fn build(b: *std.Build) !void {
     const host = b.graph.host.result;
     const target = b.resolveTargetQuery(.{}); // native
-    const optimize = std.builtin.OptimizeMode.Debug;
+    const optimize = .Debug;
 
     const website = b.addWriteFiles(); // output folder for website content
     _ = website.addCopyFile(b.path("styles.css"), "styles.css"); // copy in the style file
