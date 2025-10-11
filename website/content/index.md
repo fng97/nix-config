@@ -26,6 +26,8 @@ with a focus on portability and performance at [Parallel Wireless](https://www.p
 in Bristol. You can find my work on [GitHub](https://github.com/fng97) and you can reach me at
 <a href="mailto:hello@francisco.wiki">hello@francisco.wiki</a>. I love coffee, surfing, and hiking.
 
+I maintain a list of my favourite online resources (talks, articles, blogs, etc.) [here](links.md).
+
 # Posts
 
 <!-- BLOG-POSTS -->
