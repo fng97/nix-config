@@ -158,7 +158,7 @@
           programs.git = {
             enable = true;
             userName = "fng97";
-            userEmail = "fng97@icloud.com";
+            userEmail = "git@francisco.wiki";
             lfs.enable = true;
             extraConfig.push.autoSetupRemote = "true";
             extraConfig.init.defaultBranch = "main";
