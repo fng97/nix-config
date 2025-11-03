@@ -127,8 +127,47 @@ pub fn build(b: *std.Build) !void {
 
     // Add step for ZLS build-on-save.
     const module_check = b.addExecutable(.{ .name = "module_check", .root_module = module });
-    const tests_check = b.addExecutable(.{ .name = "tests_check", .root_module = tests_module });
+    const tests_check = b.addTest(.{ .root_module = tests_module });
     const check = b.step("check", "ZLS compilation checks");
     check.dependOn(&module_check.step);
     check.dependOn(&tests_check.step);
+
+    // Snapshot tests.
+    const snap_step = b.step("snap", "Compare snapshots between origin and HEAD");
+    const snap_check_clean = b.addSystemCommand(&.{ "git", "diff-files", "--quiet" });
+    const snap_clean_before = b.addSystemCommand(&.{ "rm", "-rf", "snap-before", "snap-after" });
+    snap_clean_before.step.dependOn(&snap_check_clean.step);
+    const snap_checkout_before = b.addSystemCommand(&.{
+        "git",
+        "checkout",
+        "--quiet",
+        "origin/main",
+    });
+    snap_checkout_before.step.dependOn(&snap_clean_before.step);
+    const snap_install_before = b.addSystemCommand(&.{
+        "zig",
+        "build",
+        "install",
+        "--prefix",
+        "snap-before",
+    });
+    snap_install_before.step.dependOn(&snap_checkout_before.step);
+    const snap_checkout_after = b.addSystemCommand(&.{ "git", "checkout", "--quiet", "-" });
+    snap_checkout_after.step.dependOn(&snap_install_before.step);
+    const snap_install_after = b.addSystemCommand(&.{
+        "zig",
+        "build",
+        "install",
+        "--prefix",
+        "snap-after",
+    });
+    snap_install_after.step.dependOn(&snap_checkout_after.step);
+    const snap_compare = b.addSystemCommand(&.{
+        "diff",
+        "--recursive",
+        "snap-before",
+        "snap-after",
+    });
+    snap_compare.step.dependOn(&snap_install_after.step);
+    snap_step.dependOn(&snap_compare.step);
 }
