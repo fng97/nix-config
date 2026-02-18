@@ -20,3 +20,18 @@ Setting up a new server:
 
 5. Over SSH, authenticate [tailscale](https://tailscale.com): `tailscale up --ssh`.
 6. In the tailscale dashboard, make sure the new machine's token will not expire.
+
+## Website
+
+Inspired by
+[TigerBeetle's documentation](https://tigerbeetle.com/blog/2025-02-27-why-we-designed-tigerbeetles-docs-from-scratch/),
+my personal website is built using the Zig build system as a static site generator. It uses Pandoc
+to generate HTML from Markdown, with an extra step for generating an index and an `atom.xml`. The
+tests validate the HTML and CSS, and check all links are reachable.
+
+To build the website, run:
+
+```sh
+$ cd website
+$ zig build # installs to zig-out
+```
