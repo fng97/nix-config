@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     adventus.url = "github:fng97/adventus";
     adventus.inputs.nixpkgs.follows = "nixpkgs";
     zig-overlay.url = "github:mitchellh/zig-overlay";
