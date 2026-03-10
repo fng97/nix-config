@@ -1,5 +1,10 @@
 # Nix Config
 
+> These were my Nix configurations for managing my development environments (NixOS-WSL & nix-darwin)
+> and my server which hosted [my website](https://github.com/fng97/website) and
+> [my Discord bot](https://github.com/fng97/adventus). Archiving this repo because I'm no longer
+> using Nix for any of this.
+
 Setting up a new server:
 
 1. Provision the server and install NixOS (e.g. with
